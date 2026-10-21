@@ -62,7 +62,8 @@ button:focus-visible { outline: 1px solid var(--accent); outline-offset: 3px; }
 }
 .pill button:hover { color: var(--fg); }
 .pill button[aria-pressed="true"], .pill button[aria-current="true"] { background: var(--fg); color: #151b20; }
-#bCv, #bWr { color: var(--fg); }
+#bCv, #bWr, #bSound { color: var(--fg); }
+#bSound[aria-pressed="true"] { color: #151b20; }
 #bCv[aria-pressed="true"], #bWr[aria-pressed="true"] { color: #151b20; }
 .more { margin-top: 22px; }
 .writing-intro { font-size: 14px; line-height: 1.8; color: var(--soft); }
@@ -170,6 +171,8 @@ body.en .story p { line-height: 1.8; }
 @media (max-width: 720px) {
   #brand { top: calc(18px + env(safe-area-inset-top, 0px)); left: calc(18px + env(safe-area-inset-left, 0px)); }
   #top { top: calc(12px + env(safe-area-inset-top, 0px)); right: calc(12px + env(safe-area-inset-right, 0px)); }
+  #top { left: 12px; justify-content: flex-end; flex-wrap: wrap; gap: 6px; }
+  #top .pill button { padding: 7px 10px; font-size: 11px; }
   #hint { display: none; }
   #intro { left: 18px; right: 18px; top: auto; transform: none; width: auto; bottom: calc(78px + env(safe-area-inset-bottom, 0px)); gap: 8px; }
   #intro h1 { font-size: 34px; }
@@ -206,6 +209,7 @@ body.en .story p { line-height: 1.8; }
     <button id="lZh" aria-pressed="true" lang="zh">中</button>
     <button id="lEn" aria-pressed="false" lang="en">EN</button>
   </div>
+  <div class="glass pill"><button id="bSound" aria-pressed="false">声音</button></div>
   <div class="glass pill"><button id="bWr" aria-pressed="false">文章</button></div>
 </div>
 
@@ -365,8 +369,8 @@ const HIGHLIGHTS = [
   'Chinese native · English C1 · German B1'
 ];
 const UI = {
-  zh: { sub: '从厨房到正房 · 1997 — 2026', hint: '滚动或按 → 往前走 · 拖动转动视角', prev: '← 上一块', next: '下一块 →', summer: '夏', winter: '冬', cv: '简历', cvTitle: '简历', introCv: '读我写的文章', introWalk: '踩上第一块石头 →', highlights: '亮点', wr: '文章', wrTitle: '文章', wrIntro: '我在 Sinolytics 写的分析，主题包括中国 AI、芯片、创新药和科技投入；还有一篇专访和一篇技术笔记。', readWr: '读我写的文章 →' },
-  en: { sub: 'From the kitchen to the main house · 1997 — 2026', hint: 'Scroll or press → to walk · drag to look around', prev: '← Back', next: 'Next stone →', summer: 'Summer', winter: 'Winter', cv: 'CV', cvTitle: 'CV', introCv: 'Read my writing', introWalk: 'Walk the path →', highlights: 'Highlights', wr: 'Writing', wrTitle: 'Writing', wrIntro: "Analyses I wrote at Sinolytics on China's AI, chips, innovative drugs and tech spending, plus an interview and a technical note.", readWr: 'Read my writing →' }
+  zh: { sub: '从厨房到正房 · 1997 — 2026', hint: '滚动或按 → 往前走 · 拖动转动视角', prev: '← 上一块', next: '下一块 →', summer: '夏', winter: '冬', cv: '简历', cvTitle: '简历', introCv: '读我写的文章', introWalk: '踩上第一块石头 →', highlights: '亮点', sound: '声音', wr: '文章', wrTitle: '文章', wrIntro: '我在 Sinolytics 写的分析，主题包括中国 AI、芯片、创新药和科技投入；还有一篇专访和一篇技术笔记。', readWr: '读我写的文章 →' },
+  en: { sub: 'From the kitchen to the main house · 1997 — 2026', hint: 'Scroll or press → to walk · drag to look around', prev: '← Back', next: 'Next stone →', summer: 'Summer', winter: 'Winter', cv: 'CV', cvTitle: 'CV', introCv: 'Read my writing', introWalk: 'Walk the path →', highlights: 'Highlights', sound: 'Sound', wr: 'Writing', wrTitle: 'Writing', wrIntro: "Analyses I wrote at Sinolytics on China's AI, chips, innovative drugs and tech spending, plus an interview and a technical note.", readWr: 'Read my writing →' }
 };
 let lang = (navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en';
 const S = i => lang === 'en' ? Object.assign({}, STEPS[i], EN[i]) : STEPS[i];
@@ -1015,6 +1019,7 @@ function applyLang() {
   document.getElementById('sSummer').textContent = u.summer;
   document.getElementById('sWinter').textContent = u.winter;
   document.getElementById('bWr').textContent = u.wr;
+  document.getElementById('bSound').textContent = u.sound;
   const intro = S(0);
   document.getElementById('introTitle').textContent = intro.title;
   document.getElementById('introP1').textContent = intro.story[0];
@@ -1108,6 +1113,7 @@ function go(i, instant) {
   navEls[i].scrollIntoView({ block: 'nearest', inline: 'center', behavior: instant || reduceMotion ? 'auto' : 'smooth' });
   render(i);
   flyTo(camFor(i), instant);
+  applySoundMix();
 }
 document.getElementById('introCta').onclick = () => go(1);
 document.getElementById('introCv').onclick = () => setOverlay('writing');
@@ -1132,6 +1138,7 @@ addEventListener('wheel', e => {
 }, { passive: true });
 
 function setSeason(s) {
+  season = s;
   winterOnly.forEach(o => o.visible = s === 'winter');
   summerOnly.forEach(o => o.visible = s === 'summer');
   document.body.classList.toggle('summer', s === 'summer');
@@ -1140,7 +1147,80 @@ function setSeason(s) {
   sun.color.setHex(s === 'winter' ? 0xffeedd : 0xffd8a6);
   document.getElementById('sWinter').setAttribute('aria-pressed', s === 'winter');
   document.getElementById('sSummer').setAttribute('aria-pressed', s === 'summer');
+  if (typeof applySoundMix === 'function') applySoundMix();
 }
+
+
+/* ---------- sound, synthesised in the browser: rain or wind, the stove, the chickens ---------- */
+let season = 'summer';
+const Sound = { ctx: null, on: false };
+function startSound() {
+  const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+  const ctx = Sound.ctx || (Sound.ctx = new AC());
+  ctx.resume();
+  if (Sound.master) { Sound.master.gain.setTargetAtTime(.9, ctx.currentTime, .4); applySoundMix(); return; }
+  const master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination);
+  master.gain.setTargetAtTime(.9, ctx.currentTime, .6);
+  const nb = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate), d = nb.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  const loop = () => { const src = ctx.createBufferSource(); src.buffer = nb; src.loop = true; src.start(); return src; };
+  const filt = (type, f, q = .7) => { const b = ctx.createBiquadFilter(); b.type = type; b.frequency.value = f; b.Q.value = q; return b; };
+  const gain = v => { const g = ctx.createGain(); g.gain.value = v; return g; };
+  // rain: bright noise
+  Sound.rain = gain(0); loop().connect(filt('highpass', 1200)).connect(filt('lowpass', 7000)).connect(Sound.rain).connect(master);
+  // wind: a band of noise that slowly rises and falls
+  const wf = filt('bandpass', 420, .8), lfo = ctx.createOscillator(), lfoG = gain(260);
+  lfo.frequency.value = .07; lfo.connect(lfoG).connect(wf.frequency); lfo.start();
+  Sound.wind = gain(0); loop().connect(wf).connect(Sound.wind).connect(master);
+  // stove: a low rumble plus crackles
+  Sound.fire = gain(0); loop().connect(filt('lowpass', 170)).connect(Sound.fire).connect(master);
+  Sound.crackle = gain(0); Sound.crackle.connect(master);
+  Sound.master = master; Sound.nb = nb;
+  crackleLoop(); cluckLoop(); applySoundMix();
+}
+function crackle() {
+  const ctx = Sound.ctx, t = ctx.currentTime, src = ctx.createBufferSource(), bp = ctx.createBiquadFilter(), g = ctx.createGain();
+  src.buffer = Sound.nb; bp.type = 'bandpass'; bp.frequency.value = 1500 + Math.random() * 2500; bp.Q.value = 1.5;
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.4 + Math.random() * .5, t + .003); g.gain.exponentialRampToValueAtTime(.001, t + .04 + Math.random() * .07);
+  src.connect(bp).connect(g).connect(Sound.crackle); src.start(t, Math.random() * 1.5, .12);
+}
+function crackleLoop() {
+  if (Sound.on) { crackle(); if (Math.random() < .3) setTimeout(crackle, 45); }
+  setTimeout(crackleLoop, 90 + Math.random() * 450);
+}
+function cluck() {
+  const ctx = Sound.ctx, n = 1 + Math.floor(Math.random() * 3);
+  for (let k = 0; k < n; k++) {
+    const t = ctx.currentTime + k * .17, o = ctx.createOscillator(), bp = ctx.createBiquadFilter(), g = ctx.createGain();
+    o.type = 'sawtooth'; o.frequency.setValueAtTime(540 + Math.random() * 90, t); o.frequency.exponentialRampToValueAtTime(310, t + .09);
+    bp.type = 'bandpass'; bp.frequency.value = 1150; bp.Q.value = 3;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.16, t + .012); g.gain.exponentialRampToValueAtTime(.001, t + .12);
+    o.connect(bp).connect(g).connect(Sound.master); o.start(t); o.stop(t + .14);
+  }
+}
+function cluckLoop() {
+  if (Sound.on) cluck();
+  setTimeout(cluckLoop, 5000 + Math.random() * 9000);
+}
+function applySoundMix() {
+  if (!Sound.master) return;
+  const t = Sound.ctx.currentTime, w = season === 'winter', near = step <= 1 && !cvOpen;
+  Sound.rain.gain.setTargetAtTime(w ? 0 : .11, t, .8);
+  Sound.wind.gain.setTargetAtTime(w ? .28 : 0, t, .8);
+  Sound.fire.gain.setTargetAtTime(near ? .55 : .14, t, .8);
+  Sound.crackle.gain.setTargetAtTime(near ? .22 : .05, t, .8);
+}
+function setSound(on) {
+  Sound.on = on;
+  document.getElementById('bSound').setAttribute('aria-pressed', on);
+  if (on) startSound();
+  else if (Sound.master) Sound.master.gain.setTargetAtTime(0, Sound.ctx.currentTime, .3);
+}
+document.getElementById('bSound').onclick = () => setSound(!Sound.on);
+document.addEventListener('visibilitychange', () => {
+  if (!Sound.ctx || !Sound.on) return;
+  document.hidden ? Sound.ctx.suspend() : Sound.ctx.resume();
+});
 
 /* ---------- pointer ---------- */
 const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
