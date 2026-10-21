@@ -1,17 +1,17 @@
 <!doctype html>
 <meta name="description" content="Weiqing Zhu – consultant in data, AI and digital transformation, Düsseldorf. A path of stones from my grandmother's kitchen in Qinghai to today.">
-<meta property="og:title" content="Weiqing Zhu · 从厨房到正房">
+<meta property="og:title" content="Weiqing Zhu · From the Kitchen to the Main House">
 <meta property="og:description" content="A path of stones from my grandmother's kitchen in Qinghai to today. Consultant in data, AI & digital transformation, Düsseldorf.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://weiweihere.github.io/">
-<meta property="og:image" content="https://weiweihere.github.io/preview.jpg">
+<meta property="og:image" content="https://weiweihere.github.io/preview.jpg?v=2">
 <meta property="og:image:width" content="2400">
 <meta property="og:image:height" content="1260">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://weiweihere.github.io/preview.jpg">
+<meta name="twitter:image" content="https://weiweihere.github.io/preview.jpg?v=2">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>姥姥家的院子</title>
+<title>Weiqing Zhu · From the Kitchen to the Main House</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600&display=swap">
@@ -197,7 +197,7 @@ body.en .story p { line-height: 1.8; }
 @media (prefers-reduced-motion: reduce) { #panel.enter { animation: none; } }
 </style>
 
-<div id="loader" aria-hidden="true"><h2>姥姥家的院子</h2><p>Weiqing Zhu · 1997 — 2026</p><span class="bar"></span></div>
+<div id="loader" aria-hidden="true"><h2 id="loaderTitle">姥姥家的院子</h2><p>Weiqing Zhu · 1997 — 2026</p><span class="bar"></span></div>
 <div id="stage"></div>
 <div id="tags"></div>
 
@@ -388,6 +388,7 @@ const UI = {
   en: { sub: 'From the kitchen to the main house · 1997 — 2026', hint: 'Scroll or press → to walk · drag to look around', prev: '← Back', next: 'Next stone →', summer: 'Summer', winter: 'Winter', cv: 'CV', cvTitle: 'CV', introCv: 'Read my writing', introWalk: 'Walk the path →', highlights: 'Highlights', sound: 'Sound', wr: 'Writing', wrTitle: 'Writing', wrIntro: "Analyses I published at Sinolytics on China's AI, chips, innovative drugs and tech spending, plus an interview and a technical note.", readWr: 'Read my writing →' }
 };
 let lang = (navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en';
+if (lang === 'en') { const lt = document.getElementById('loaderTitle'); lt.textContent = 'From the Kitchen to the Main House'; lt.style.fontFamily = 'var(--latin)'; lt.style.fontWeight = '600'; lt.style.letterSpacing = '.02em'; }
 const S = i => lang === 'en' ? Object.assign({}, STEPS[i], EN[i]) : STEPS[i];
 
 /* ================================================================ */
@@ -1083,6 +1084,7 @@ function buildUI() {
 function applyLang() {
   const u = UI[lang];
   document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+  document.title = lang === 'en' ? 'Weiqing Zhu · From the Kitchen to the Main House' : 'Weiqing Zhu · 从厨房到正房';
   document.body.classList.toggle('en', lang === 'en');
   STEPS.forEach((_, i) => {
     const s = S(i);
