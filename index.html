@@ -704,15 +704,18 @@ function propMesh(g, geo, color, x, y, z, o = {}) {
   m.position.set(x, y, z); m.castShadow = m.receiveShadow = true; g.add(m); return m;
 }
 function makePig() {
-  const g = new THREE.Group(), pink = 0xe6a49b;
-  const body = propMesh(g, new THREE.SphereGeometry(.42, 18, 14), pink, 0, .42, 0); body.scale.set(1.35, .95, .95);
-  propMesh(g, new THREE.SphereGeometry(.26, 16, 12), pink, .58, .52, 0);
-  propMesh(g, new THREE.CylinderGeometry(.11, .12, .1, 14), 0xd98a82, .82, .5, 0).rotation.z = Math.PI / 2;
-  for (const z of [-.12, .12]) { const e = propMesh(g, new THREE.ConeGeometry(.08, .16, 6), pink, .55, .76, z); e.rotation.z = -.4; }
-  for (const [x, z] of [[.32, .2], [.32, -.2], [-.32, .2], [-.32, -.2]]) propMesh(g, new THREE.CylinderGeometry(.06, .06, .22, 8), pink, x, .11, z);
-  const tail = propMesh(g, new THREE.TorusGeometry(.06, .02, 6, 12, Math.PI * 1.6), pink, -.58, .55, 0); tail.rotation.y = Math.PI / 2;
-  const trough = propMesh(g, new THREE.BoxGeometry(.9, .22, .36), 0x5a4632, 1.25, .11, .55);
-  propMesh(g, new THREE.BoxGeometry(.78, .04, .26), 0xb69a5a, 1.25, .21, .55);
+  const g = new THREE.Group(), pink = 0xd98378, deep = 0xc2655c;
+  const body = propMesh(g, new THREE.SphereGeometry(.42, 20, 16), pink, 0, .44, 0, { roughness: .6 }); body.scale.set(1.35, .95, .95);
+  propMesh(g, new THREE.SphereGeometry(.27, 18, 14), pink, .58, .54, 0, { roughness: .6 });
+  propMesh(g, new THREE.CylinderGeometry(.11, .12, .1, 16), deep, .84, .5, 0, { roughness: .5 }).rotation.z = Math.PI / 2;
+  for (const z of [-.04, .04]) propMesh(g, new THREE.SphereGeometry(.022, 8, 6), 0x5a2a26, .9, .5, z);
+  for (const z of [-.11, .11]) propMesh(g, new THREE.SphereGeometry(.035, 10, 8), 0x1a1412, .78, .62, z, { roughness: .3 });
+  for (const z of [-.13, .13]) { const e = propMesh(g, new THREE.ConeGeometry(.09, .17, 8), deep, .52, .79, z); e.rotation.z = -.5; e.rotation.x = z > 0 ? .3 : -.3; }
+  for (const [x, z] of [[.32, .2], [.32, -.2], [-.32, .2], [-.32, -.2]]) propMesh(g, new THREE.CylinderGeometry(.07, .065, .24, 10), pink, x, .12, z);
+  const tail = propMesh(g, new THREE.TorusGeometry(.06, .022, 6, 12, Math.PI * 1.6), deep, -.6, .56, 0); tail.rotation.y = Math.PI / 2;
+  // the trough sits in front of its snout, with food in it
+  propMesh(g, new THREE.BoxGeometry(.36, .22, .9), 0x5a4632, 1.25, .11, 0);
+  propMesh(g, new THREE.BoxGeometry(.26, .04, .78), 0xb49455, 1.25, .21, 0);
   g.scale.setScalar(.9);
   return g;
 }
