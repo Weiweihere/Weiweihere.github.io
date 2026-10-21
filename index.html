@@ -713,7 +713,7 @@ function makePig() {
   const tail = propMesh(g, new THREE.TorusGeometry(.06, .02, 6, 12, Math.PI * 1.6), pink, -.58, .55, 0); tail.rotation.y = Math.PI / 2;
   const trough = propMesh(g, new THREE.BoxGeometry(.9, .22, .36), 0x5a4632, 1.25, .11, .55);
   propMesh(g, new THREE.BoxGeometry(.78, .04, .26), 0xb69a5a, 1.25, .21, .55);
-  g.scale.setScalar(.75);
+  g.scale.setScalar(.9);
   return g;
 }
 function makeBooks() {
@@ -921,7 +921,7 @@ function init() {
 
 
   // a small thing beside each stone, so every stretch of life is recognisable at a glance
-  [[makePig, 0, 1.6, -1.7, .9], [makeBooks, 1, 1.15, -1.2, .3], [makeUmbrella, 2, 1.25, -1.15, 0], [makeCherriesAndCrab, 3, 1.2, -1.15, .4], [makeBicycle, 4, -1.45, -1.2, -.35], [makeSewingTable, 5, -2.2, .6, .25]].forEach(([fn, k, dx, dz, ry]) => {
+  [[makePig, 0, 2.0, 1.1, -.5], [makeBooks, 1, 1.15, -1.2, .3], [makeUmbrella, 2, 1.25, -1.15, 0], [makeCherriesAndCrab, 3, 1.2, -1.15, .4], [makeBicycle, 4, -1.45, -1.2, -.35], [makeSewingTable, 5, -2.2, .6, .25]].forEach(([fn, k, dx, dz, ry]) => {
     const [x, z] = pathAt(STONE_T[k]);
     const pr = fn(); pr.position.set(x + dx, 0, z + dz); pr.rotation.y += ry; scene.add(pr); register(pr, k + 1);
   });
@@ -930,7 +930,7 @@ function init() {
   const tree = makeTree({ seed: 7, len: 1.9, rad: .24, leaf: 0x5f8f3a, leafR: .7, fruitCount: 4 });
   tree.position.set(-1.6, 0, -4.6); scene.add(tree);
   // grandma\'s chickens
-  [[0xf2efe6, -7.6, 2.9, .6], [0x9a5b2e, -5.4, -1.6, 2.2], [0xf2efe6, 1.6, -2.8, 4.1]].forEach(([c, x, z, r]) => { const ch = makeChicken(c); ch.position.set(x, 0, z); ch.rotation.y = r; scene.add(ch); });
+  [[0xf2efe6, -9.6, 3.4, .6], [0x9a5b2e, -5.4, -1.6, 2.2], [0xf2efe6, 1.6, -2.8, 4.1]].forEach(([c, x, z, r]) => { const ch = makeChicken(c); ch.position.set(x, 0, z); ch.rotation.y = r; scene.add(ch); });
 
   girl = makeGirl(); scene.add(girl);
   girl.position.copy(spot(0)); girl.rotation.y = Math.PI * .35;
