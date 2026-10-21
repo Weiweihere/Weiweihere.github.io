@@ -1,0 +1,1136 @@
+<!doctype html>
+<meta name="description" content="Weiqing Zhu – business transformation and data/AI consultant in Düsseldorf. A path of stones from my grandmother's kitchen in Qinghai to today.">
+<meta property="og:title" content="Weiqing Zhu · 从厨房到正房">
+<meta property="og:description" content="A path of stones from my grandmother's kitchen in Qinghai to today. Business transformation & data/AI consultant, Düsseldorf.">
+<meta property="og:type" content="website">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>姥姥家的院子</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600&display=swap">
+<style>
+/* Layout: a long diorama of the muddy path from grandma\'s kitchen to the main house, centred on a deep
+   gradient; name top-left, season + CV top-right, the stones as a pill bottom-centre, the story panel right */
+:root {
+  --bg0: #0d1217;
+  --bg1: #24313f;
+  --glass: rgba(16, 22, 28, .62);
+  --line: rgba(255, 255, 255, .12);
+  --fg: #eef0ea;
+  --muted: #9aa5aa;
+  --soft: #d3d8d2;
+  --accent: #b9d27a;   /* 青苹果 */
+  --display: "Ma Shan Zheng", "STXingkai", "KaiTi", "Kaiti SC", serif;
+  --body: "Noto Serif SC", "Songti SC", "SimSun", serif;
+  --latin: "Cormorant Garamond", "Noto Serif SC", Georgia, serif;
+  color-scheme: dark;
+}
+body.summer { --bg0: #0e130f; --bg1: #2c3a2c; }
+[hidden] { display: none !important; }
+html, body { height: 100%; margin: 0; overflow: hidden; }
+body {
+  background: radial-gradient(ellipse 85% 75% at 45% 45%, var(--bg1), var(--bg0) 78%);
+  background-color: var(--bg0);
+  color: var(--fg); font-family: var(--body);
+}
+#stage { position: fixed; inset: 0; }
+#stage canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+button { -webkit-tap-highlight-color: transparent; font-family: var(--body); }
+button:focus-visible { outline: 1px solid var(--accent); outline-offset: 3px; }
+.glass { background: var(--glass); border: 1px solid var(--line); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+
+#brand {
+  position: fixed; pointer-events: none;
+  top: calc(24px + env(safe-area-inset-top, 0px));
+  left: calc(26px + env(safe-area-inset-left, 0px));
+  display: grid; gap: 6px;
+}
+#brand .name { font: 600 13px/1 var(--latin); letter-spacing: .34em; text-transform: uppercase; }
+#brand .sub { font-size: 11px; letter-spacing: .3em; color: var(--muted); }
+
+#top {
+  position: fixed; display: flex; gap: 8px; align-items: center;
+  top: calc(20px + env(safe-area-inset-top, 0px));
+  right: calc(22px + env(safe-area-inset-right, 0px));
+}
+.pill { display: flex; padding: 3px; border-radius: 999px; }
+.pill button {
+  font-size: 12px; line-height: 1; letter-spacing: .1em; color: var(--muted);
+  background: transparent; border: 0; padding: 8px 14px; border-radius: 999px; cursor: pointer; white-space: nowrap;
+  transition: background .25s, color .25s;
+}
+.pill button:hover { color: var(--fg); }
+.pill button[aria-pressed="true"], .pill button[aria-current="true"] { background: var(--fg); color: #151b20; }
+#bCv, #bWr { color: var(--fg); }
+#bCv[aria-pressed="true"], #bWr[aria-pressed="true"] { color: #151b20; }
+.more { margin-top: 22px; }
+.writing-intro { font-size: 14px; line-height: 1.8; color: var(--soft); }
+
+
+#nav {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  gap: 2px; padding: 4px;
+  max-width: calc(100vw - 32px); overflow-x: auto; scrollbar-width: none;
+}
+#nav::-webkit-scrollbar { display: none; }
+#nav button { display: grid; gap: 4px; justify-items: center; padding: 7px 13px; }
+#nav button small { font: 500 10px/1 var(--latin); letter-spacing: .12em; opacity: .7; }
+
+#hint { margin: 0; font-size: 11px; letter-spacing: .14em; color: var(--muted); }
+
+#intro {
+  position: fixed;
+  left: calc(36px + env(safe-area-inset-left, 0px));
+  top: 50%; transform: translateY(-50%);
+  width: min(380px, 32vw); display: grid; gap: 12px;
+}
+#intro #hint { position: static; margin-top: 10px; font-size: 11px; }
+#intro .kicker { font: 500 11px/1 var(--latin); letter-spacing: .3em; text-transform: uppercase; color: var(--muted); }
+#intro h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(34px, 3.4vw, 48px); line-height: 1.1; letter-spacing: .04em; }
+#intro p { margin: 0; font-size: 15px; line-height: 1.95; color: var(--soft); text-wrap: pretty; }
+#intro .tagline { font-size: 13px; line-height: 1.6; color: var(--fg); letter-spacing: .02em; }
+#intro .tagline b { font-family: var(--latin); font-weight: 600; font-size: 15px; letter-spacing: .06em; }
+#intro .ctas { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.ghost { font-size: 14px; letter-spacing: .06em; color: var(--fg); background: transparent; border: 1px solid rgba(255,255,255,.35); border-radius: 999px; padding: 11px 18px; cursor: pointer; }
+.ghost:hover { border-color: var(--fg); }
+.highlights { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 10px; }
+.highlights li { display: grid; grid-template-columns: 8px 1fr; gap: 10px; align-items: baseline; font-size: 14px; line-height: 1.5; }
+.highlights li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); transform: translateY(-2px); }
+body.en #pTitle, body.en #intro h1 { font-family: var(--latin); font-weight: 600; letter-spacing: .01em; }
+body.en #intro h1 { font-size: clamp(30px, 2.9vw, 42px); }
+#intro { text-shadow: 0 1px 12px rgba(0,0,0,.55); }
+body.en .story p { line-height: 1.8; }
+#tags { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+.tag {
+  position: absolute; left: 0; top: 0;
+  transform: translate(-50%, -100%);
+  font-size: 12px; line-height: 1; letter-spacing: .12em; color: var(--fg); white-space: nowrap;
+  background: var(--glass); border: 1px solid var(--line); border-radius: 999px;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  padding: 7px 12px; opacity: 0; transition: opacity .3s;
+}
+.tag.on { opacity: 1; }
+
+#panel {
+  position: fixed;
+  top: calc(72px + env(safe-area-inset-top, 0px));
+  right: calc(22px + env(safe-area-inset-right, 0px));
+  bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+  width: min(390px, calc(100vw - 32px));
+  display: flex; flex-direction: column;
+  border-radius: 18px; overflow: hidden;
+}
+#panel.enter { animation: slidein .5s cubic-bezier(.2, .7, .2, 1); }
+@keyframes slidein { from { transform: translateY(10px); opacity: 0; } to { transform: none; opacity: 1; } }
+.ph { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 20px 24px 0; }
+.kicker { font-size: 11px; letter-spacing: .26em; color: var(--muted); }
+.count { font: 500 12px/1 var(--latin); letter-spacing: .2em; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pscroll { overflow-y: auto; padding: 4px 24px 22px; flex: 1; min-height: 0; }
+#pTitle { margin: 8px 0 0; font-family: var(--display); font-weight: 400; font-size: 46px; line-height: 1.1; letter-spacing: .04em; }
+.story { margin: 18px 0 0; display: grid; gap: 14px; }
+.story p { margin: 0; font-size: 16px; line-height: 2; color: var(--fg); }
+.cta { justify-self: start; margin-top: 8px; font-size: 14px; letter-spacing: .1em; color: #151b20; background: var(--accent); border: 0; border-radius: 999px; padding: 12px 18px; cursor: pointer; }
+.cv { margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--line); }
+.cv h4 { margin: 0 0 14px; font: 600 11px/1 var(--latin); letter-spacing: .3em; text-transform: uppercase; color: var(--accent); }
+.items + h4, .chips + h4 { margin-top: 22px; }
+.items { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+.items > li { display: grid; gap: 4px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.items > li:last-child { border-bottom: 0; padding-bottom: 0; }
+.items h3 { margin: 0; font-size: 14px; font-weight: 600; line-height: 1.5; }
+.items .meta { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+.items p { margin: 2px 0 0; font-size: 13px; line-height: 1.75; color: var(--soft); }
+.bullets { margin: 6px 0 0; padding-left: 1.1em; display: grid; gap: 6px; }
+.bullets li { font-size: 13px; line-height: 1.7; color: var(--soft); }
+.bullets li::marker { color: var(--accent); }
+.items a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(185,210,122,.35); }
+.items a:hover { border-bottom-color: var(--accent); }
+.items .links { font-size: 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.chips li { font-size: 12px; padding: 6px 11px; border: 1px solid var(--line); border-radius: 999px; }
+.pnav { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 24px 14px; border-top: 1px solid var(--line); }
+.pnav button { font-size: 12px; letter-spacing: .1em; background: transparent; border: 0; color: var(--muted); cursor: pointer; padding: 8px 0; }
+.pnav button:hover { color: var(--fg); }
+.pnav button:disabled { opacity: .3; cursor: default; }
+
+@media (max-width: 720px) {
+  #brand { top: calc(18px + env(safe-area-inset-top, 0px)); left: calc(18px + env(safe-area-inset-left, 0px)); }
+  #top { top: calc(12px + env(safe-area-inset-top, 0px)); right: calc(12px + env(safe-area-inset-right, 0px)); }
+  #hint { display: none; }
+  #intro { left: 18px; right: 18px; top: auto; transform: none; width: auto; bottom: calc(78px + env(safe-area-inset-bottom, 0px)); gap: 8px; }
+  #intro h1 { font-size: 34px; }
+  #intro p { font-size: 13px; line-height: 1.8; }
+  #introP2 { display: none; }
+  #nav { left: 12px; right: 12px; transform: none; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
+  #panel {
+    top: auto; left: 0; right: 0; bottom: calc(70px + env(safe-area-inset-bottom, 0px)); width: auto; max-height: 48%;
+    border-radius: 18px 18px 0 0; border-bottom: 0;
+    padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px);
+  }
+  #pTitle { font-size: 34px; }
+  .story p { font-size: 15px; line-height: 1.9; }
+}
+@media (max-width: 560px) { #brand { display: none; } }
+@media (prefers-reduced-motion: reduce) { #panel.enter { animation: none; } }
+</style>
+
+<div id="stage"></div>
+<div id="tags"></div>
+
+<header id="brand">
+  <span class="name">Weiqing Zhu</span>
+  <span class="sub" id="brandSub">从厨房到正房 · 1997 — 2026</span>
+</header>
+
+<div id="top">
+  <div class="glass pill" role="group" aria-label="季节">
+    <button id="sSummer" aria-pressed="true">夏</button>
+    <button id="sWinter" aria-pressed="false">冬</button>
+  </div>
+  <div class="glass pill" role="group" aria-label="语言">
+    <button id="lZh" aria-pressed="true" lang="zh">中</button>
+    <button id="lEn" aria-pressed="false" lang="en">EN</button>
+  </div>
+  <div class="glass pill"><button id="bWr" aria-pressed="false">文章</button></div>
+</div>
+
+<nav id="nav" class="glass pill" aria-label="石头路"></nav>
+
+<section id="intro" aria-label="开场">
+  <span class="kicker">A path of stones · 1997 — 2026</span>
+  <h1 id="introTitle">从厨房到正房</h1>
+  <p class="tagline"><b>Weiqing Zhu</b> · Business transformation &amp; data/AI consultant · Düsseldorf</p>
+  <p class="story-line" id="introP1"></p>
+  <p class="story-line" id="introP2"></p>
+  <div class="ctas">
+    <button class="cta" id="introCv"></button>
+    <button class="ghost" id="introCta"></button>
+  </div>
+  <p id="hint">滚动或按 → 往前走 · 拖动转动视角</p>
+</section>
+
+<aside id="panel" class="glass" aria-live="polite" hidden>
+  <div class="ph">
+    <span class="kicker" id="pKicker"></span>
+    <span class="count" id="pCount"></span>
+  </div>
+  <div class="pscroll">
+    <h2 id="pTitle"></h2>
+    <div class="story" id="pStory"></div>
+    <div id="pBody"></div>
+  </div>
+  <div class="pnav">
+    <button id="pPrev">← 上一块</button>
+    <button id="pNext">下一块 →</button>
+  </div>
+</aside>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/RoundedBoxGeometry.js"></script>
+<script>
+/* ================================================================
+   内容：一条从厨房到正房的石头路，一块石头是一段人生。
+   前三块只讲故事；后面的石头在故事下面附上那一段的履历。
+   ================================================================ */
+const CV = {
+  sinolytics: { t: 'Consultant · Sinolytics', m: 'Jan 2025 – Present · Berlin, Germany (hybrid)', b: [
+    'Led the 0-to-1 development of Geolytics.Hub, a research management platform (Python, AWS RDS, JavaScript frontend, row-level access control), now used by 100+ beta users in total, around 20 of them internal.',
+    'Reduced recurring research and information retrieval effort by about 30% by structuring internal knowledge and improving report reuse.',
+    'Built and iterated an AI-enabled knowledge access chatbot on top of the platform, improving knowledge retrieval efficiency by an estimated 10%.',
+    'Prepared executive-ready research, slide decks, and advisory outputs on China AI, cybersecurity compliance, and digital policy for international stakeholders.',
+    'Communicated with about 20–30 suppliers to collect supply chain information and assess risk exposure in a metal supply chain project.',
+    'Analyzed country-level procurement and sales data for a German industrial client to identify high-risk exposures, together with a geopolitical risk analyst.'
+  ] },
+  dxc: { t: 'SAP SD Junior Consultant · DXC Technology', m: 'Jun 2020 – Jul 2021 · Dalian, China', b: [
+    'Supported SAP R/3 Sales and Distribution processes for a global optics manufacturer: order creation, delivery, billing, pricing, and master data.',
+    'Completed SAP SD training and contributed to system testing, defect management, and issue coordination for a document management implementation.'
+  ] },
+  master: { t: 'Master of Business Informatics · University of Mannheim', m: 'Mar 2021 – Jan 2025 · Mannheim, Germany', d: 'Thesis: A variation of RDF2Vec: Applying Spreading Activation on Knowledge Graph Embeddings – a comparative study with RDF2Vec Light. Grade: 2.5 (gut).', links: [['Thesis code on GitHub', 'https://github.com/Weiweihere/Spreading-activation_rdf2vec']] },
+  bachelor: { t: 'Bachelor of Information Management and Information System · Dalian Neusoft University of Information', m: 'Sep 2016 – Jul 2020 · Dalian, China', d: 'Thesis: Design and Development of Tianfu Tea Management System with SAP ABAP. Excellent Thesis. GPA: 1.7. Alps Alpine Scholarship (2018) · Neusoft Holdings Scholarship, 2nd class.' },
+  articles: [
+    { t: "Huawei Ascend roadmap: First 960 variant brought forward by nine months", m: 'Sinolytics · October 2026', url: 'https://sinolytics.de/global-business-news/blog/technology/huawei-ascend-ai-roadmap-acceleration/' },
+    { t: "China's desktop AI: Office agent market is consolidating around the ecosystems of Tencent, Alibaba, and ByteDance", m: 'Sinolytics · July 2026', url: 'https://sinolytics.de/global-business-news/blog/technology/china-desktop-ai-office-agent-market/' },
+    { t: "China's AI app market: A few leaders, a fast-moving race", m: 'Sinolytics · May 2026', url: 'https://sinolytics.de/global-business-news/blog/technology/china-ai-app-market-cost-pressures/' },
+    { t: "China's innovative drugs: Deepening integration into global pipelines", m: 'Sinolytics · March 2026', url: 'https://sinolytics.de/global-business-news/blog/china-business/china-innovative-drugs-global-pipelines/' },
+    { t: "China's AI growth continues, with adoption gradually shifting toward industrial applications", m: 'Sinolytics · January 2026', url: 'https://sinolytics.de/global-business-news/blog/technology/china-ai-manufacturing-adoption-2025/' },
+    { t: "Budget allocation reflects China's push in global tech competition", m: 'Sinolytics · July 2025', url: 'https://sinolytics.de/global-business-news/blog/china-business/china-budget-allocation/' }
+  ],
+  interview: { t: "Interview: Weiqing Zhu on China's AI ecosystem, and the craft of \"juggling data\"", m: 'Sinolytics · June 2026', url: 'https://sinolytics.de/global-business-news/blog/technology/weiqing-zhu-china-ai-ecosystem-data/' },
+  writing: { t: 'Do You Really Need AWS RDS? A Practical Guide for Small Projects', m: 'Article on AWS architecture and cost', url: 'https://github.com/Weiweihere/Weiweihere/blob/main/articles/aws-rds-vs-ec2.md' },
+  skills: [
+    { t: 'Business transformation support', d: 'Project coordination, stakeholder communication, workshop and presentation preparation, structured problem solving.' },
+    { t: 'Data and AI implementation', d: 'Python, SQL/PostgreSQL, AWS RDS, JavaScript frontend, web scraping, internal knowledge systems, AI chatbot iteration.' },
+    { t: 'SAP and process background', d: 'SAP SD training and SAP R/3 Sales & Distribution support: order creation, delivery, billing, pricing, master data, testing and defect management.' }
+  ],
+  industry: ['China AI compliance', 'Cybersecurity compliance', 'Digital policy', 'Supply chain risk', 'Geopolitical exposure', 'Industrial clients'],
+  languages: [{ t: 'Chinese', m: 'Native' }, { t: 'English', m: 'C1' }, { t: 'German', m: 'B1 in progress' }],
+  contact: [{ t: 'Email', m: 'zhuweiqing7@gmail.com' }, { t: 'GitHub', m: 'github.com/Weiweihere', url: 'https://github.com/Weiweihere' }, { t: 'Location', m: 'Düsseldorf, Germany' }],
+  summary: 'Business transformation and data/AI consultant with 1.5 years of consulting experience at Sinolytics, hands-on delivery of internal AI/data tools, and prior SAP SD exposure. I turn fragmented business information into structured insights, executive-ready materials, and reusable workflows for international stakeholders.'
+};
+
+const STEPS = [
+  { nav: '序', year: '', kicker: '一条石头路', title: '从厨房到正房', story: [
+    '小时候一下雨，姥姥家的院子就全是泥。从厨房端着饭走到正屋，要踩着一块一块的石头。',
+    '这是我从 1997 年走到今天的路。每一块石头一开始都很滑，但我每一次都站稳了。'
+  ], cta: '踩上第一块石头 →' },
+  { nav: '姥姥家', year: '1997', kicker: '1997 — 2001 · 青海', title: '姥姥家', story: [
+    '我在青海姥姥家住到三四岁。房子是土做的，灶头烧火，熏得黑乎乎的。',
+    '可那里有一股味道：烟、泥土和饭菜混在一起。到现在，它还是我记忆里最安心的味道。',
+    '姥姥很勤劳，总把家里打扫得干干净净，每天最重要的事是喂鸡、喂猪。她炒的鸡蛋特别好吃，还会带我去吃青海的凉皮。'
+  ] },
+  { nav: '西宁', year: '2001', kicker: '幼儿园 — 高一 · 西宁', title: '西宁', story: [
+    '我在西宁上了幼儿园、小学、初中和高一。我是语文课代表，拿过很多奖状，还代表学校去参加西宁市的跑步比赛。',
+    '我最喜欢去西宁图书馆和新华书店，也喜欢和同学一起去古城台、去公园玩。我有很多少数民族同学，我很喜欢吃回族的拉面，也爱跳藏族的锅庄。',
+    '十三四岁那年，姥姥找裁缝给我做了一套西装。很多年后，我自己也坐到了缝纫机前。',
+  ] },
+  { nav: '衢州', year: '2013', kicker: '高中 · 浙江衢州', title: '衢州', story: [
+    '高一那年，我跟着爸妈从青海搬到了衢州，第一次离开西北。',
+    '一开始很难。后来，我在那里扎下了根。'
+  ] },
+  { nav: '大连', year: '2016', kicker: '2016 — 2021 · 大连', title: '大连', story: [
+    '大连意味着自由。夏天去海边，冬天去滑雪，有螃蟹，也有樱桃。',
+    '我跳快闪、当助教，拿了阿尔卑斯阿尔派奖学金和东软控股二等奖学金，成了年级第二名；课外写公众号、给英语外教当助手。后来在 DXC 实习，留下来工作了一年，然后决定出国读书。'
+  ], cv: [['Education', [CV.bachelor]], ['Experience', [CV.dxc]]] },
+  { nav: '曼海姆', year: '2021', kicker: '2021 — 2025 · 曼海姆', title: '曼海姆', story: [
+    '刚到德国时，连开一张银行卡都磕磕绊绊。',
+    '后来，我在学校健身房打工，挣到了在德国的第一笔钱。我常去图书馆，常去运动，也常去 party。我住在一间能看到河的宿舍里，去过意大利、葡萄牙、希腊、卢森堡，走遍了德国的许多城市，还有很多别的地方。'
+  ], cv: [['Education', [CV.master]]] },
+  { nav: '杜塞', year: '2025', kicker: '2025 — 现在 · 杜塞尔多夫', title: '现在', story: [
+    '现在我在杜塞尔多夫全职工作。上班前运动，下班后也常去运动。',
+    '周六早上去跳蚤市场听音乐，回家打扫、买菜、做饭。周日，我坐在缝纫机前，这是我最近的新爱好。'
+  ], cv: [['Experience', [CV.sinolytics]], ['Focus', CV.industry, 'chips']], more: true },
+  { nav: '正房', year: '往前', kicker: '走到正房 · 往前走', title: '正房', story: [
+    '工作里我最开心的时刻，是带着自己的思考和别人沟通，彼此共振的那一刻。',
+    '接下来，我想继续做连接业务和技术的事：把零散的信息理清楚，变成别人用得上的东西。',
+  ], cv: [['Skills', CV.skills], ['Languages', CV.languages], ['Contact', CV.contact]] }
+];
+
+const EN = [
+  { nav: 'Intro', kicker: 'A path of stones', title: 'From the Kitchen to the Main House', story: [
+    'When it rained, my grandmother\'s courtyard turned to mud. To carry food from the kitchen to the main house, you stepped from one stone to the next.',
+    'This is the path I have walked since 1997. Every stone was slippery at first, but each time I found my footing.'
+  ] },
+  { nav: 'Grandma', kicker: '1997 — 2001 · Qinghai', title: 'Grandma\'s Home', story: [
+    'I lived with my grandmother in Qinghai until I was three or four. The house was built of earth, and the wood-fired stove had blackened the kitchen.',
+    'But it had a smell: smoke, earth and cooking, all mixed together. It is still the most comforting smell I know.',
+    'My grandmother worked hard. She kept the house spotless, and the most important jobs of her day were feeding the chickens and the pigs. Her scrambled eggs were the best, and she took me out for Qinghai liangpi, cold noodles.'
+  ] },
+  { nav: 'Xining', year: '2001', kicker: 'Kindergarten — 10th grade · Xining', title: 'Xining', story: [
+    'I grew up in Xining, from kindergarten through my first year of high school. I was the class representative for Chinese, won many certificates, and ran for my school in the city race.',
+    'I loved the Xining library and the Xinhua bookstore, and playing with classmates around Guchengtai and in the park. Many of my classmates were from ethnic minorities. I loved Hui-style hand-pulled noodles, and dancing the Tibetan guozhuang circle dance.',
+    'When I was thirteen or fourteen, my grandmother had a tailor make me a suit. Many years later, I sat down at a sewing machine of my own.',
+  ] },
+  { nav: 'Quzhou', kicker: 'High school · Quzhou, Zhejiang', title: 'Quzhou', story: [
+    'In my first year of high school I moved with my parents from Qinghai to Quzhou, my first time away from the northwest.',
+    'It was hard at first. Then I put down roots.'
+  ] },
+  { nav: 'Dalian', kicker: '2016 — 2021 · Dalian', title: 'Dalian', story: [
+    'Dalian meant freedom: the beach in summer, skiing in winter, crabs and cherries.',
+    'I danced in a flash-mob club, worked as a teaching assistant, won the Alps Alpine Scholarship and a Neusoft Holdings Scholarship, and ranked second in my year. On the side I wrote for WeChat public accounts and assisted English teachers. An internship at DXC became a year-long job, and then I decided to study abroad.'
+  ] },
+  { nav: 'Mannheim', kicker: '2021 — 2025 · Mannheim', title: 'Mannheim', story: [
+    'When I first arrived in Germany, even opening a bank account was a struggle.',
+    'Later I worked at the university gym and earned my first money in Germany. I spent my time in the library, doing sports and going to parties. I lived in a dorm with a view of the river, and travelled a lot: Italy, Portugal, Greece, Luxembourg, many German cities and plenty of other places.'
+  ] },
+  { nav: 'Düsseldorf', kicker: '2025 — now · Düsseldorf', title: 'Now', story: [
+    'Today I work full-time in Düsseldorf. I exercise before work, and often after.',
+    'On Saturday mornings I go to the flea market to listen to music, then clean, shop and cook. On Sundays I sit at my sewing machine, my newest hobby.'
+  ] },
+  { nav: 'Main house', year: 'Ahead', kicker: 'The main house · Looking ahead', title: 'The Main House', story: [
+    'My happiest moments at work are when I bring my own thinking to a conversation and we truly resonate.',
+    'Next, I want to keep working between business and technology, turning scattered information into something people can actually use.',
+  ] }
+];
+const HIGHLIGHTS = [
+  'Geolytics.Hub: 0→1 research platform · 100+ beta users',
+  '≈30% less recurring research effort through structured knowledge',
+  'AI knowledge chatbot · ≈10% faster knowledge retrieval',
+  'SAP SD background · DXC Technology',
+  'Chinese native · English C1 · German B1'
+];
+const UI = {
+  zh: { sub: '从厨房到正房 · 1997 — 2026', hint: '滚动或按 → 往前走 · 拖动转动视角', prev: '← 上一块', next: '下一块 →', summer: '夏', winter: '冬', cv: '简历', cvTitle: '简历', introCv: '读我写的文章', introWalk: '踩上第一块石头 →', highlights: '亮点', wr: '文章', wrTitle: '文章', wrIntro: '我在 Sinolytics 写的分析，主题包括中国 AI、芯片、创新药和科技投入；还有一篇专访和一篇技术笔记。', readWr: '读我写的文章 →' },
+  en: { sub: 'From the kitchen to the main house · 1997 — 2026', hint: 'Scroll or press → to walk · drag to look around', prev: '← Back', next: 'Next stone →', summer: 'Summer', winter: 'Winter', cv: 'CV', cvTitle: 'CV', introCv: 'Read my writing', introWalk: 'Walk the path →', highlights: 'Highlights', wr: 'Writing', wrTitle: 'Writing', wrIntro: "Analyses I wrote at Sinolytics on China's AI, chips, innovative drugs and tech spending, plus an interview and a technical note.", readWr: 'Read my writing →' }
+};
+let lang = (navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en';
+const S = i => lang === 'en' ? Object.assign({}, STEPS[i], EN[i]) : STEPS[i];
+
+/* ================================================================ */
+
+const COL = { snow: 0xf1f3f4, bark: 0x3b2f27, leaf: 0x5d8a3b, hay: 0xc8a75a };
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const winterOnly = [], summerOnly = [];
+const seasonal = (o, s) => ((s === 'winter' ? winterOnly : summerOnly).push(o), o);
+function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function hash2(x, y) { const h = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return h - Math.floor(h); }
+function vnoise(x, y) {
+  const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+  const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+  const a = hash2(xi, yi), b = hash2(xi + 1, yi), c = hash2(xi, yi + 1), d = hash2(xi + 1, yi + 1);
+  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+}
+
+/* ---------- textures ---------- */
+function canvasTex(w, h, draw) {
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  draw(c.getContext('2d'), w, h);
+  const t = new THREE.CanvasTexture(c);
+  t.encoding = THREE.sRGBEncoding; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 4;
+  return t;
+}
+function rep(t, rx, ry) { const n = t.clone(); n.needsUpdate = true; n.repeat.set(rx, ry); return n; }
+const T = {};
+function buildTextures() {
+  const earth = (base, soot) => canvasTex(256, 256, (c, w, h) => {
+    c.fillStyle = base; c.fillRect(0, 0, w, h);
+    for (let y = 0; y < h; y += 32) { c.fillStyle = 'rgba(70,50,30,.2)'; c.fillRect(0, y, w, 4); c.fillStyle = 'rgba(255,240,210,.07)'; c.fillRect(0, y + 6, w, 10); }
+    for (let i = 0; i < 900; i++) { c.fillStyle = `rgba(50,35,20,${Math.random() * .14})`; c.fillRect(Math.random() * w, Math.random() * h, 2, 2); }
+    if (soot) { const g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, 'rgba(20,15,10,.65)'); g.addColorStop(.6, 'rgba(20,15,10,.15)'); g.addColorStop(1, 'rgba(20,15,10,0)'); c.fillStyle = g; c.fillRect(0, 0, w, h); }
+  });
+  T.rammed = earth('#a98d68', false);
+  T.soot = earth('#8a7357', true);
+  T.door = canvasTex(256, 384, (c, w, h) => {
+    c.fillStyle = '#5a2a1c'; c.fillRect(0, 0, w, h);
+    for (let x = 0; x < w; x += 32) { c.fillStyle = 'rgba(0,0,0,.18)'; c.fillRect(x, 0, 3, h); }
+    c.fillStyle = '#2a140c'; c.fillRect(w / 2 - 3, 0, 6, h);
+    c.fillStyle = '#c9a24c';
+    for (let y = 60; y < h - 40; y += 44) for (const x of [36, 80, 176, 220]) { c.beginPath(); c.arc(x, y, 5, 0, 7); c.fill(); }
+    c.strokeStyle = '#c9a24c'; c.lineWidth = 4;
+    for (const x of [w / 2 - 22, w / 2 + 22]) { c.beginPath(); c.arc(x, h * .55, 12, 0, 7); c.stroke(); }
+    for (const x of [w * .25, w * .75]) {
+      c.save(); c.translate(x, h * .26); c.rotate(Math.PI / 4); c.fillStyle = '#b8342a'; c.fillRect(-28, -28, 56, 56); c.restore();
+      c.save(); c.translate(x, h * .26); c.rotate(Math.PI);
+      c.fillStyle = '#1b1410'; c.font = '44px "Ma Shan Zheng", KaiTi, serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.fillText('福', 0, 2); c.restore();
+    }
+  });
+  const couplet = text => canvasTex(64, 448, (c, w, h) => {
+    c.fillStyle = '#b23526'; c.fillRect(0, 0, w, h);
+    c.strokeStyle = '#d6a94a'; c.lineWidth = 3; c.strokeRect(4, 4, w - 8, h - 8);
+    c.fillStyle = '#1b1410'; c.font = '46px "Ma Shan Zheng", KaiTi, serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    [...text].forEach((ch, i) => c.fillText(ch, w / 2, 36 + i * 60));
+  });
+  T.coupletR = couplet('天增岁月人增寿');
+  T.coupletL = couplet('春满乾坤福满门');
+  T.flake = canvasTex(32, 32, (c, w, h) => {
+    const g = c.createRadialGradient(16, 16, 0, 16, 16, 16);
+    g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+    c.fillStyle = g; c.fillRect(0, 0, w, h);
+  });
+}
+
+/* ---------- helpers ---------- */
+const mat = (color, o = {}) => new THREE.MeshStandardMaterial(Object.assign({ color, roughness: .92, metalness: 0 }, o));
+function box(w, h, d, m) {
+  const r = Math.min(.05, w / 4, h / 4, d / 4);
+  const geo = THREE.RoundedBoxGeometry && r > .012 ? new THREE.RoundedBoxGeometry(w, h, d, 2, r) : new THREE.BoxGeometry(w, h, d);
+  const b = new THREE.Mesh(geo, m); b.castShadow = b.receiveShadow = true; return b;
+}
+function plane(w, h, m) { const p = new THREE.Mesh(new THREE.PlaneGeometry(w, h), m); p.receiveShadow = true; return p; }
+const mx4 = new THREE.Matrix4(), q4 = new THREE.Quaternion(), v4 = new THREE.Vector3(), s4 = new THREE.Vector3(1, 1, 1);
+
+/* Curved roof: steep near the ridge, flatter at the eaves, corners lifted; tiles are real ridges in the surface */
+function addFineRoof(g, w, d, h, roofH, oh, gableMat) {
+  const len = w + 1.0, half = d / 2 + oh, TILE = .32;
+  const NX = Math.round(len / TILE) * 6, NV = 26;
+  const drop = v => .6 * v + .4 * (1 - (1 - v) * (1 - v));
+  const ripple = x => { const c = .5 + .5 * Math.cos(2 * Math.PI * x / TILE); return c * c; };
+  const P = (x, v, s, off) => {
+    const e = Math.max(0, (Math.abs(x) - (len / 2 - 1.5)) / 1.5);
+    return [x, h - .05 + roofH * (1 - drop(v)) + .5 * e * e * v * v + off, s * v * half * (1 + .06 * e * e * v)];
+  };
+  const groove = new THREE.Color(0x3d4246), crest = new THREE.Color(0x70767a), under = new THREE.Color(0x4b3a2b);
+  const tileM = mat(0xffffff, { vertexColors: true, roughness: .72, side: THREE.DoubleSide });
+  const snowM = mat(COL.snow, { side: THREE.DoubleSide });
+  const endM = mat(0x353a3e, { roughness: .6 });
+  for (const s of [1, -1]) {
+    const pos = [], cols = [], idx = [], c = new THREE.Color();
+    const grid = (off, colorOf) => {
+      const start = pos.length / 3;
+      for (let j = 0; j <= NV; j++) for (let i = 0; i <= NX; i++) {
+        const x = -len / 2 + len * i / NX, r = ripple(x);
+        pos.push(...P(x, j / NV, s, off(r)));
+        colorOf(c, r).convertSRGBToLinear(); cols.push(c.r, c.g, c.b);
+      }
+      for (let j = 0; j < NV; j++) for (let i = 0; i < NX; i++) {
+        const a = start + j * (NX + 1) + i, b = a + 1, cc = a + NX + 1, dd = cc + 1;
+        idx.push(a, cc, b, b, cc, dd);
+      }
+      return start;
+    };
+    const top = grid(r => .07 * r, (c, r) => c.copy(groove).lerp(crest, r));
+    const bot = grid(() => -.16, c => c.copy(under));
+    const strip = (ta, tb, ba, bb) => idx.push(ta, ba, tb, tb, ba, bb);
+    for (let i = 0; i < NX; i++) { const o = NV * (NX + 1) + i; strip(top + o, top + o + 1, bot + o, bot + o + 1); }
+    for (let j = 0; j < NV; j++) for (const i of [0, NX]) { const o = j * (NX + 1) + i, o2 = o + NX + 1; strip(top + o, top + o2, bot + o, bot + o2); }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    geo.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
+    geo.setIndex(idx); geo.computeVertexNormals();
+    const roof = new THREE.Mesh(geo, tileM); roof.castShadow = roof.receiveShadow = true; g.add(roof);
+
+    const sp = [], si = [], SV = 16, SX = 60;
+    for (let j = 0; j <= SV; j++) for (let i = 0; i <= SX; i++) sp.push(...P(-len / 2 + .1 + (len - .2) * i / SX, .92 * j / SV, s, .12));
+    for (let j = 0; j < SV; j++) for (let i = 0; i < SX; i++) { const a = j * (SX + 1) + i; si.push(a, a + SX + 1, a + 1, a + 1, a + SX + 1, a + SX + 2); }
+    const sg = new THREE.BufferGeometry(); sg.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3)); sg.setIndex(si); sg.computeVertexNormals();
+    const snow = new THREE.Mesh(sg, snowM); snow.receiveShadow = true; g.add(seasonal(snow, 'winter'));
+
+    const ends = [];
+    for (let x = -Math.floor(len / 2 / TILE) * TILE; x <= len / 2 - .05; x += TILE) ends.push(x);
+    const em = new THREE.InstancedMesh(new THREE.CylinderGeometry(.08, .08, .07, 10).rotateX(Math.PI / 2), endM, ends.length);
+    ends.forEach((x, k) => { const p = P(x, 1, s, .05); em.setMatrixAt(k, mx4.compose(v4.set(p[0], p[1], p[2] + s * .03), q4.identity(), s4)); });
+    em.castShadow = true; g.add(em);
+
+    const raf = [];
+    for (let x = -w / 2 - .3; x <= w / 2 + .3; x += .34) raf.push(x);
+    const rm = new THREE.InstancedMesh(new THREE.BoxGeometry(.09, .09, .5), mat(0x5a3d28, { roughness: .8 }), raf.length);
+    raf.forEach((x, k) => { const p = P(x, .86, s, -.25); rm.setMatrixAt(k, mx4.compose(v4.set(p[0], p[1], p[2]), q4.identity(), s4)); });
+    rm.castShadow = true; g.add(rm);
+  }
+  const vEdge = (d / 2) / half, prof = [];
+  for (let k = 0; k <= 12; k++) { const v = vEdge * (1 - k / 12), p = P(w / 2, v, 1, -.16); prof.push([p[2], p[1]]); }
+  const gs = new THREE.Shape(); gs.moveTo(-d / 2, .45); gs.lineTo(d / 2, .45);
+  prof.forEach(([z, y]) => gs.lineTo(z, y));
+  prof.slice().reverse().forEach(([z, y]) => gs.lineTo(-z, y));
+  gs.closePath();
+  const gg = new THREE.ExtrudeGeometry(gs, { depth: .3, bevelEnabled: false });
+  for (const sx of [-1, 1]) { const m = new THREE.Mesh(gg, gableMat); m.rotation.y = Math.PI / 2; m.position.x = sx * w / 2 - .15; m.castShadow = m.receiveShadow = true; g.add(m); }
+  const yr = h - .05 + roofH;
+  const ridgeM = mat(0x43484c, { roughness: .7 });
+  const ridge = box(len + .1, .36, .4, ridgeM); ridge.position.y = yr + .12; g.add(ridge);
+  const cap = box(len + .2, .1, .48, ridgeM); cap.position.y = yr + .32; g.add(cap);
+  const rs = seasonal(box(len, .1, .5, mat(COL.snow)), 'winter'); rs.position.y = yr + .42; g.add(rs);
+  for (const sx of [-1, 1]) {
+    const post = box(.28, .5, .34, ridgeM); post.position.set(sx * (len / 2 - .05), yr + .5, 0); g.add(post);
+    const curl = new THREE.Mesh(new THREE.TorusGeometry(.2, .07, 8, 16, Math.PI * 1.3), ridgeM);
+    curl.position.set(sx * (len / 2 - .12), yr + .82, 0); curl.rotation.z = sx > 0 ? .3 : Math.PI - .3 - Math.PI * .3; curl.castShadow = true; g.add(curl);
+  }
+}
+
+function latticeWin(w, h, glow = .45) {
+  const g = new THREE.Group(), fr = mat(0x3b2516, { roughness: .7 });
+  const paper = new THREE.Mesh(new THREE.PlaneGeometry(w - .1, h - .1), new THREE.MeshStandardMaterial({ color: 0xeadcbd, emissive: 0xffb45e, emissiveIntensity: glow, roughness: .95 }));
+  g.add(paper);
+  const t = .09;
+  [[w, t, 0, h / 2 - t / 2], [w, t, 0, -h / 2 + t / 2], [t, h, -w / 2 + t / 2, 0], [t, h, w / 2 - t / 2, 0]].forEach(([bw, bh, x, y]) => { const b = box(bw, bh, .12, fr); b.position.set(x, y, .05); g.add(b); });
+  const sp = .19;
+  for (let x = -w / 2 + sp; x < w / 2 - .06; x += sp) { const b = new THREE.Mesh(new THREE.BoxGeometry(.03, h - .12, .05), fr); b.position.set(x, 0, .03); g.add(b); }
+  for (let y = -h / 2 + sp; y < h / 2 - .06; y += sp) { const b = new THREE.Mesh(new THREE.BoxGeometry(w - .12, .03, .05), fr); b.position.set(0, y, .03); g.add(b); }
+  return g;
+}
+function fineDoor(w, h) {
+  const g = new THREE.Group(), fr = mat(0x3b2516, { roughness: .7 }), stone = mat(0x8a8780);
+  [[w + .2, .14, 0, h / 2 + .07], [.12, h + .14, -w / 2 - .04, 0], [.12, h + .14, w / 2 + .04, 0]].forEach(([bw, bh, x, y]) => { const b = box(bw, bh, .16, fr); b.position.set(x, y, .04); g.add(b); });
+  for (const side of [0, 1]) {
+    const t = rep(T.door, .5, 1); t.offset.x = side * .5;
+    const leaf = box(w / 2 - .02, h, .08, mat(0xffffff, { map: t, roughness: .6 }));
+    leaf.position.set((side ? 1 : -1) * w / 4, 0, 0); g.add(leaf);
+  }
+  const sill = box(w + .1, .18, .22, fr); sill.position.set(0, -h / 2 + .09, .08); g.add(sill);
+  for (const sx of [-1, 1]) { const st = box(.28, .32, .46, stone); st.position.set(sx * (w / 2 + .18), -h / 2 + .16, .2); g.add(st); }
+  return g;
+}
+function lantern() {
+  const g = new THREE.Group(), gold = mat(0xc69a4a, { roughness: .4, metalness: .4 });
+  const cord = new THREE.Mesh(new THREE.CylinderGeometry(.01, .01, .35, 4), mat(0x222222)); cord.position.y = .45; g.add(cord);
+  const body = new THREE.Mesh(new THREE.SphereGeometry(.22, 16, 12), new THREE.MeshStandardMaterial({ color: 0xc8321f, emissive: 0xff5a26, emissiveIntensity: .7, roughness: .6 }));
+  body.scale.y = 1.15; g.add(body);
+  for (const y of [.25, -.25]) { const c = new THREE.Mesh(new THREE.CylinderGeometry(.09, .09, .06, 12), gold); c.position.y = y; g.add(c); }
+  const tassel = new THREE.Mesh(new THREE.CylinderGeometry(.015, .05, .22, 6), mat(0xd3a83e)); tassel.position.y = -.4; g.add(tassel);
+  return g;
+}
+
+/* House facing +z: stone platform, earthen walls, timber front behind a columned porch */
+function makeFineHouse(o) {
+  const { w, d, h, roofH = 1.5, oh = .75, front = [], lanterns = true, wallTex = T.rammed, cols = 4 } = o;
+  const g = new THREE.Group(), porch = .55;
+  const wallM = mat(0xffffff, { map: rep(wallTex, w / 3, h / 3) });
+  const stoneM = mat(0x8c8982, { roughness: .95 }), lacquer = mat(0x6a3424, { roughness: .55 }), woodM = mat(0x4a3121, { roughness: .8 });
+  const base = box(w + .9, .45, d + porch + .9, stoneM); base.position.set(0, .225, porch / 2); g.add(base);
+  const step = box(1.8, .22, .5, stoneM); step.position.set(o.stepX || 0, .11, d / 2 + porch + .7); g.add(step);
+  const body = box(w, h - .45, d, wallM); body.position.y = .45 + (h - .45) / 2; g.add(body);
+  const infill = box(w - .1, h - .45, .1, o.sootFront ? mat(0x2e221a, { roughness: .9 }) : woodM); infill.position.set(0, .45 + (h - .45) / 2, d / 2 + .05); g.add(infill);
+  const zc = d / 2 + porch;
+  for (let i = 0; i <= cols; i++) {
+    const x = -w / 2 + .25 + i * (w - .5) / cols;
+    const col = new THREE.Mesh(new THREE.CylinderGeometry(.14, .16, h - .45, 14), lacquer); col.position.set(x, .45 + (h - .45) / 2, zc); col.castShadow = true; g.add(col);
+    const drum = new THREE.Mesh(new THREE.CylinderGeometry(.22, .25, .16, 16), stoneM); drum.position.set(x, .53, zc); drum.castShadow = drum.receiveShadow = true; g.add(drum);
+    for (const sx of [-1, 1]) { if ((i === 0 && sx < 0) || (i === cols && sx > 0)) continue; const br = box(.55, .13, .1, lacquer); br.position.set(x + sx * .34, h - .45, zc); g.add(br); }
+  }
+  const lintel = box(w + .2, .28, .22, lacquer); lintel.position.set(0, h - .22, zc); g.add(lintel);
+  const plate = box(w + .3, .12, .32, woodM); plate.position.set(0, h - .02, zc); g.add(plate);
+  front.forEach(f => {
+    let el;
+    if (f.type === 'door') { el = fineDoor(f.w, f.h); el.position.set(f.x, .45 + f.h / 2, d / 2 + .12); }
+    else if (f.type === 'cl' || f.type === 'cr') { el = plane(f.w, f.h, mat(0xffffff, { map: f.type === 'cl' ? T.coupletL : T.coupletR, roughness: .8 })); el.position.set(f.x, f.y, d / 2 + .13); }
+    else { el = latticeWin(f.w, f.h, f.glow); el.position.set(f.x, f.y ?? (h + .45) / 2 + .1, d / 2 + .11); }
+    g.add(el);
+  });
+  if (lanterns) for (const x of [-1.5, 1.5]) { const l = lantern(); l.position.set(x, h - .95, zc - .05); g.add(l); }
+  addFineRoof(g, w, d, h, roofH, oh, wallM);
+  return g;
+}
+
+/* Fruit tree: bare in winter; leaves and a few fruit in summer */
+function makeTree(o = {}) {
+  const { seed = 42, len = 2.0, rad = .26, leaf = COL.leaf, leafR = .75, fruit = 0x9fc84a, fruitR = .14, fruitCount = 3 } = o;
+  const g = new THREE.Group(), bark = mat(COL.bark), r = rng(seed);
+  const leafM = mat(leaf, { flatShading: true, roughness: .8 }), fruitM = mat(fruit, { roughness: .45 });
+  const foliage = seasonal(new THREE.Group(), 'summer');
+  const tips = [];
+  const grow = (len, rad, depth) => {
+    const b = new THREE.Group(); b.rotation.order = 'YXZ';
+    const geo = new THREE.CylinderGeometry(rad * .68, rad, len, 7); geo.translate(0, len / 2, 0);
+    const m = new THREE.Mesh(geo, bark); m.castShadow = true; b.add(m);
+    if (depth > 0) {
+      const n = depth > 2 ? 3 : 2;
+      for (let i = 0; i < n; i++) {
+        const c = grow(len * .74, rad * .64, depth - 1);
+        c.position.y = len * (.78 + r() * .2);
+        c.rotation.y = i * (Math.PI * 2 / n) + r() * 1.2;
+        c.rotation.z = .45 + r() * .45;
+        b.add(c);
+      }
+    } else { const tip = new THREE.Object3D(); tip.position.y = len; b.add(tip); tips.push(tip); }
+    return b;
+  };
+  g.add(grow(len, rad, 4));
+  g.updateMatrixWorld(true);
+  tips.forEach((t, i) => {
+    if (i % 2) return;
+    const f = new THREE.Mesh(new THREE.IcosahedronGeometry(leafR + r() * leafR * .5, 1), leafM);
+    f.position.copy(t.getWorldPosition(new THREE.Vector3())); f.castShadow = true; foliage.add(f);
+  });
+  // only a few green apples a year
+  for (let k = 0; k < fruitCount; k++) {
+    const t = tips[Math.floor((k + .5) * tips.length / fruitCount)];
+    const a = new THREE.Mesh(new THREE.SphereGeometry(fruitR, 14, 10), fruitM);
+    a.position.copy(t.getWorldPosition(new THREE.Vector3())).add(new THREE.Vector3((r() - .5) * .6, -leafR - .1, (r() - .5) * .6 + .4));
+    a.castShadow = true; foliage.add(a);
+  }
+  g.add(foliage);
+  return g;
+}
+
+function makeChicken(color) {
+  const g = new THREE.Group(), m = mat(color, { roughness: .8 }), red = mat(0xc0302a), beak = mat(0xd99a2b);
+  const body = new THREE.Mesh(new THREE.SphereGeometry(.22, 14, 10), m); body.scale.set(1.25, .95, .9); body.position.y = .3; body.castShadow = true; g.add(body);
+  const tail = new THREE.Mesh(new THREE.ConeGeometry(.12, .26, 8), m); tail.position.set(-.26, .42, 0); tail.rotation.z = .9; g.add(tail);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(.11, 12, 10), m); head.position.set(.22, .52, 0); head.castShadow = true; g.add(head);
+  const comb = box(.1, .07, .04, red); comb.position.set(.23, .64, 0); g.add(comb);
+  const bk = new THREE.Mesh(new THREE.ConeGeometry(.035, .09, 6), beak); bk.rotation.z = -Math.PI / 2; bk.position.set(.34, .51, 0); g.add(bk);
+  for (const z of [-.07, .07]) { const l = new THREE.Mesh(new THREE.CylinderGeometry(.015, .015, .18, 4), beak); l.position.set(0, .09, z); g.add(l); }
+  return g;
+}
+
+/* The little girl carrying a bowl from the kitchen */
+/* The same girl at different ages: she grows up as she walks the path */
+const AGES = [
+  { scale: .78, body: 'dress', color: 0xa9432c, hair: 'pigtails', prop: 'bowl' },                                   // 姥姥家
+  { scale: .88, body: 'top', color: 0xf2efe6, bottom: 0x2d4a8a, skirt: true, hair: 'pigtails', prop: 'school' },     // 西宁: red scarf, satchel
+  { scale: .96, body: 'top', color: 0x3d6fb4, bottom: 0x3d6fb4, stripe: true, hair: 'ponytail', prop: 'backpack' },  // 衢州: school tracksuit
+  { scale: 1.02, body: 'dress', color: 0xe0b84a, hair: 'ponytail', prop: 'suitcase' },                              // 大连
+  { scale: 1.05, body: 'top', color: 0x4f7a5a, bottom: 0x2b2f36, hair: 'long', prop: 'books' },                     // 曼海姆
+  { scale: 1.07, body: 'top', color: 0x2c3a52, bottom: 0x2b2f36, hair: 'long', prop: 'laptop' }                     // 现在
+];
+const AGE_OF_STEP = [0, 0, 1, 2, 3, 4, 5, 5];
+function makePerson(o) {
+  const g = new THREE.Group(), skin = mat(0xf0d0b4, { roughness: .7 }), hairM = mat(0x241913, { roughness: .6 });
+  const m = (geo, material, x, y, z) => { const me = new THREE.Mesh(geo, material); me.position.set(x, y, z); me.castShadow = true; g.add(me); return me; };
+  for (const x of [-.08, .08]) m(new THREE.CylinderGeometry(.045, .045, .3, 8), mat(0x2b2420), x, .15, 0);
+  if (o.body === 'dress') m(new THREE.ConeGeometry(.3, .74, 20), mat(o.color, { roughness: .8 }), 0, .6, 0);
+  else {
+    m(o.skirt ? new THREE.ConeGeometry(.27, .36, 18) : new THREE.CylinderGeometry(.17, .19, .36, 14), mat(o.bottom, { roughness: .8 }), 0, .44, 0);
+    m(new THREE.CylinderGeometry(.16, .2, .4, 16), mat(o.color, { roughness: .8 }), 0, .8, 0);
+    if (o.stripe) for (const x of [-.19, .19]) m(new THREE.BoxGeometry(.02, .38, .06), mat(0xf2efe6), x, .8, 0);
+  }
+  m(new THREE.SphereGeometry(.18, 20, 16), skin, 0, 1.13, 0);
+  const cap = m(new THREE.SphereGeometry(.195, 20, 16, 0, Math.PI * 2, 0, Math.PI * .62), hairM, 0, 1.15, -.02); cap.rotation.x = -.35;
+  if (o.hair === 'pigtails') for (const x of [-.17, .17]) m(new THREE.SphereGeometry(.07, 10, 8), hairM, x, 1.07, -.06);
+  if (o.hair === 'ponytail') { const t = m(new THREE.ConeGeometry(.07, .32, 10), hairM, 0, 1.06, -.2); t.rotation.x = -.5; }
+  if (o.hair === 'long') m(new THREE.CylinderGeometry(.17, .2, .36, 16, 1, true, Math.PI * .15, Math.PI * 1.7), hairM, 0, .98, -.03).rotation.y = Math.PI;
+  const holding = ['bowl', 'books', 'laptop'].includes(o.prop);
+  for (const x of [-.14, .14]) {
+    const arm = m(new THREE.CylinderGeometry(.035, .035, .32, 6), skin, holding ? x * .9 : x * 1.45, holding ? .84 : .74, holding ? .14 : 0);
+    if (holding) arm.rotation.x = -1.1; else arm.rotation.z = x > 0 ? .2 : -.2;
+  }
+  if (o.prop === 'bowl') {
+    m(new THREE.CylinderGeometry(.14, .09, .1, 16), mat(0xf2eee4, { roughness: .4 }), 0, .82, .3);
+    m(new THREE.CylinderGeometry(.12, .12, .02, 16), mat(0xe8b43a, { roughness: .5 }), 0, .87, .3);
+  }
+  if (o.prop === 'school' || o.prop === 'backpack') m(new THREE.BoxGeometry(.3, .34, .14), mat(o.prop === 'school' ? 0xc8482f : 0x333a44, { roughness: .7 }), 0, .82, -.22);
+  if (o.prop === 'school') { const sc = m(new THREE.ConeGeometry(.06, .2, 3), mat(0xd22b22, { roughness: .6 }), 0, .9, .17); sc.rotation.x = Math.PI; }
+  if (o.prop === 'suitcase') {
+    m(new THREE.BoxGeometry(.34, .44, .18), mat(0x7d4b3a, { roughness: .6 }), .36, .27, 0);
+    m(new THREE.CylinderGeometry(.012, .012, .2, 4), mat(0x222222), .36, .59, 0);
+  }
+  if (o.prop === 'books') ['0x8a3b2e', '0x3d5f8a', '0xd8c9a3'].forEach((c, k) => m(new THREE.BoxGeometry(.3 - k * .03, .055, .22), mat(Number(c), { roughness: .7 }), 0, .8 + k * .056, .27));
+  if (o.prop === 'laptop') m(new THREE.BoxGeometry(.34, .03, .24), mat(0xb8bcc2, { roughness: .35, metalness: .5 }), 0, .82, .28);
+  g.scale.setScalar(o.scale);
+  return g;
+}
+function makeGirl() {
+  const g = new THREE.Group();
+  g.userData.ages = AGES.map(o => { const p = makePerson(o); p.visible = false; g.add(p); return p; });
+  g.userData.ages[0].visible = true;
+  return g;
+}
+function setAge(a) { girl.userData.ages.forEach((p, k) => p.visible = k === a); }
+
+/* ---------- the diorama ---------- */
+const W = 40, D = 17, CR = 3.2, BASE = 3.2;
+const HW = W / 2 - CR, HD = D / 2 - CR;
+function toEdge(x, z) {
+  const cx = Math.max(-HW, Math.min(HW, x)), cz = Math.max(-HD, Math.min(HD, z));
+  const dx = x - cx, dz = z - cz, dist = Math.hypot(dx, dz);
+  return dist > CR ? [cx + dx / dist * CR, cz + dz / dist * CR] : [x, z];
+}
+const pathAt = t => [-10.2 + t * 16.6, .9 + 3.3 * Math.sin(Math.PI * t)];
+const STONE_T = [0, .2, .4, .6, .8, 1];
+const KITCHEN = { x: -11.5, z: -3.2 }, MAIN = { x: 8.6, z: -3.4 };
+function pathDist(x, z) { let m = 1e9; for (let i = 0; i <= 40; i++) { const [px, pz] = pathAt(i / 40); m = Math.min(m, Math.hypot(x - px, z - pz)); } return m; }
+function groundH(x, z) { return (vnoise(x * .35, z * .35) - .5) * .14 - Math.max(0, 1.4 - pathDist(x, z)) * .03; }
+
+let scene, camera, renderer, controls, hemi, sun, fill, snowPts, girl, smoke = [];
+const stones = [], rings = [], pickables = [], tagEls = [];
+
+function init() {
+  buildTextures();
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setClearColor(0x000000, 0);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  document.getElementById('stage').appendChild(renderer.domElement);
+
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(32, innerWidth / innerHeight, .5, 400);
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true; controls.dampingFactor = .08;
+  controls.enableZoom = false; controls.enablePan = false;
+  controls.minPolarAngle = .55; controls.maxPolarAngle = 1.28;
+  controls.minAzimuthAngle = -.75; controls.maxAzimuthAngle = .75;
+
+  hemi = new THREE.HemisphereLight(0xcfdcf0, 0x3a2f26, .55); scene.add(hemi);
+  sun = new THREE.DirectionalLight(0xffd8a6, 2.3);
+  sun.position.set(-22, 26, 20); sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048);
+  Object.assign(sun.shadow.camera, { left: -26, right: 26, top: 20, bottom: -20, near: 1, far: 90 });
+  sun.shadow.bias = -.0004; sun.shadow.normalBias = .03;
+  scene.add(sun);
+  fill = new THREE.DirectionalLight(0x9db6e8, .5); fill.position.set(24, 14, -20); scene.add(fill);
+
+  // ground: wet mud along the path, a little grass at the edges; snow in winter
+  const gp = new THREE.PlaneGeometry(W, D, 200, 86); gp.rotateX(-Math.PI / 2);
+  const gpos = gp.attributes.position;
+  for (let i = 0; i < gpos.count; i++) {
+    const [x, z] = toEdge(gpos.getX(i), gpos.getZ(i));
+    gpos.setXYZ(i, x, groundH(x, z), z);
+  }
+  gp.computeVertexNormals();
+  const cS = new Float32Array(gpos.count * 3), cW = new Float32Array(gpos.count * 3), col = new THREE.Color(), c2 = new THREE.Color();
+  const put = (arr, i, a, b, k) => { col.setHex(a).lerp(c2.setHex(b), Math.max(0, Math.min(1, k))).convertSRGBToLinear(); arr[i * 3] = col.r; arr[i * 3 + 1] = col.g; arr[i * 3 + 2] = col.b; };
+  for (let i = 0; i < gpos.count; i++) {
+    const x = gpos.getX(i), z = gpos.getZ(i), pd = pathDist(x, z), n = vnoise(x * .6, z * .6);
+    const grass = Math.max(0, (Math.abs(z) - 5.2) / 2.5 + (n - .5) * .9, (Math.abs(x) - 16) / 3);
+    const wet = 1 - Math.min(1, pd / 2.2);
+    put(cS, i, 0x7c644a, 0x6a8a3e, grass > .35 ? 1 : 0);
+    if (wet > 0) { col.fromArray(cS, i * 3); c2.setHex(0x3e3024).convertSRGBToLinear(); col.lerp(c2, wet * .75); cS[i * 3] = col.r; cS[i * 3 + 1] = col.g; cS[i * 3 + 2] = col.b; }
+    put(cW, i, 0xeef1f3, 0x8a8178, wet * .7);
+  }
+  const gS = gp.clone(); gS.setAttribute('color', new THREE.BufferAttribute(cS, 3));
+  gp.setAttribute('color', new THREE.BufferAttribute(cW, 3));
+  const groundS = new THREE.Mesh(gS, mat(0xffffff, { vertexColors: true, roughness: .85 })); groundS.receiveShadow = true; scene.add(seasonal(groundS, 'summer'));
+  const groundW = new THREE.Mesh(gp, mat(0xffffff, { vertexColors: true, roughness: .8 })); groundW.receiveShadow = true; scene.add(seasonal(groundW, 'winter'));
+
+  // cut edge: bands of loess down to the base
+  const NP = 360, K = 16, spos = [], scol = [], sidx = [];
+  const strata = [0x8c7151, 0x957b59, 0x9f8662, 0x917655, 0x86694a];
+  for (let j = 0; j <= NP; j++) {
+    const an = j / NP * Math.PI * 2, [x, z] = toEdge(Math.cos(an) * W, Math.sin(an) * D), top = groundH(x, z) - .01;
+    for (let k = 0; k <= K; k++) {
+      const y = top + (-BASE - top) * k / K;
+      spos.push(x, y, z);
+      col.setHex(k === 0 ? 0x4d4030 : strata[Math.floor((y + 40) / .7) % strata.length]).convertSRGBToLinear(); scol.push(col.r, col.g, col.b);
+    }
+  }
+  for (let j = 0; j < NP; j++) for (let k = 0; k < K; k++) { const q = j * (K + 1) + k, w = q + K + 1; sidx.push(q, w, q + 1, w, w + 1, q + 1); }
+  const sideG = new THREE.BufferGeometry();
+  sideG.setAttribute('position', new THREE.Float32BufferAttribute(spos, 3));
+  sideG.setAttribute('color', new THREE.Float32BufferAttribute(scol, 3));
+  sideG.setIndex(sidx); sideG.computeVertexNormals();
+  scene.add(new THREE.Mesh(sideG, mat(0xffffff, { vertexColors: true, side: THREE.DoubleSide })));
+  const rr = (s, hw, hd, r) => { s.moveTo(-hw + r, -hd); s.lineTo(hw - r, -hd); s.quadraticCurveTo(hw, -hd, hw, -hd + r); s.lineTo(hw, hd - r); s.quadraticCurveTo(hw, hd, hw - r, hd); s.lineTo(-hw + r, hd); s.quadraticCurveTo(-hw, hd, -hw, hd - r); s.lineTo(-hw, -hd + r); s.quadraticCurveTo(-hw, -hd, -hw + r, -hd); return s; };
+  const plinth = new THREE.Mesh(new THREE.ExtrudeGeometry(rr(new THREE.Shape(), W / 2 + 1, D / 2 + 1, CR + 1), { depth: 1, bevelEnabled: true, bevelSize: .15, bevelThickness: .15, bevelSegments: 3, curveSegments: 24 }), mat(0x0e1216, { roughness: .85 }));
+  plinth.rotation.x = -Math.PI / 2; plinth.position.y = -BASE - 1.15; plinth.receiveShadow = true; scene.add(plinth);
+
+  // back wall of rammed earth
+  const wallM = mat(0xffffff, { map: rep(T.rammed, 10, .8) });
+  const wall = box(W - 6, 2.1, .6, wallM); wall.position.set(0, 1.05, -7.1); scene.add(wall);
+  const wcap = seasonal(box(W - 5.9, .12, .7, mat(COL.snow)), 'winter'); wcap.position.set(0, 2.16, -7.1); scene.add(wcap);
+
+  // the kitchen: smaller, soot-blackened, smoke from the stove chimney
+  const kitchen = makeFineHouse({ w: 5.4, d: 3.6, h: 2.9, roofH: 1.2, oh: .65, lanterns: false, wallTex: T.soot, sootFront: true, cols: 2, stepX: .1,
+    front: [{ type: 'door', x: .1, w: 1.2, h: 2.0 }, { type: 'win', x: -1.75, w: .9, h: .8, y: 1.9, glow: .9 }, { type: 'win', x: 1.85, w: .9, h: .8, y: 1.9, glow: .9 }] });
+  kitchen.position.set(KITCHEN.x, 0, KITCHEN.z); scene.add(kitchen);
+  const chim = box(.5, 1.5, .5, mat(0x3a332d)); chim.position.set(1.6, 3.7, -.8); kitchen.add(chim);
+  kitchen.updateMatrixWorld(true);
+  const chimTop = new THREE.Vector3(1.6, 4.5, -.8).applyMatrix4(kitchen.matrixWorld);
+  const smokeM = new THREE.SpriteMaterial({ map: T.flake, color: 0xaeb3b6, transparent: true, opacity: .5, depthWrite: false });
+  for (let i = 0; i < 10; i++) { const s = new THREE.Sprite(smokeM.clone()); s.userData.t = i / 10; s.userData.base = chimTop; scene.add(s); smoke.push(s); }
+  register(kitchen, 1);
+
+  // the main house at the end of the path
+  const main = makeFineHouse({ w: 8.6, d: 4.4, h: 3.3, roofH: 1.6, front: [
+    { type: 'win', x: -2.5, w: 2.1, h: 1.7 }, { type: 'door', x: 0, w: 1.5, h: 2.35 },
+    { type: 'win', x: 2.6, w: .85, h: .85, y: 2.1 },
+    { type: 'cl', x: -1.02, w: .3, h: 1.9, y: 1.5 }, { type: 'cr', x: 1.02, w: .3, h: 1.9, y: 1.5 }
+  ] });
+  main.position.set(MAIN.x, 0, MAIN.z); scene.add(main); register(main, 7);
+
+  // stepping stones, one for each stretch of life
+  STONE_T.forEach((t, i) => {
+    const [x, z] = pathAt(t);
+    const geo = new THREE.DodecahedronGeometry(1, 1), p = geo.attributes.position;
+    for (let k = 0; k < p.count; k++) {
+      const px = p.getX(k), py = p.getY(k), pz = p.getZ(k), j = 1 + (hash2(px * 7.1 + i, py * 3.7 + pz * 5.3) - .5) * .32;
+      p.setXYZ(k, px * j, py * j, pz * j);
+    }
+    geo.computeVertexNormals();
+    const st = new THREE.Mesh(geo, mat(0x3a3733, { flatShading: true, roughness: .95 }));
+    st.scale.set(1.05, .3, .82); st.rotation.y = hash2(i, 3) * 3; st.position.set(x, .06, z);
+    st.castShadow = st.receiveShadow = true; scene.add(st); stones.push(st);
+    const sn = seasonal(new THREE.Mesh(new THREE.SphereGeometry(.85, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2), mat(COL.snow)), 'winter');
+    sn.scale.set(1.05, .12, .8); sn.position.set(x, .3, z); sn.rotation.y = st.rotation.y; scene.add(sn);
+    const ring = new THREE.Mesh(new THREE.RingGeometry(1.2, 1.42, 64), new THREE.MeshBasicMaterial({ color: 0xd8f08a, transparent: true, opacity: 0, toneMapped: false, depthWrite: false }));
+    ring.rotation.x = -Math.PI / 2; ring.position.set(x, .05, z); scene.add(ring); rings.push(ring);
+    register(st, i + 1);
+  });
+  // a few small pebbles between the big stones
+  const peb = mat(0x55524d, { flatShading: true });
+  for (let k = 0; k < 22; k++) {
+    const t = (k + .5) / 22, [x, z] = pathAt(t), r = .14 + hash2(k, 9) * .16;
+    const m = new THREE.Mesh(new THREE.DodecahedronGeometry(r, 0), peb);
+    m.scale.y = .45; m.position.set(x + (hash2(k, 2) - .5) * 1.8, .03, z + (hash2(k, 5) - .5) * 1.6); m.castShadow = true; scene.add(m);
+  }
+  // puddles from the rain
+  const puddleS = mat(0x2e271f, { roughness: .08, metalness: .35 }), puddleW = mat(0xcbd6dd, { roughness: .2, metalness: .2 });
+  for (const [x, z, sx, sz] of [[-6.4, 3.4, 1.3, .8], [.4, 4.9, 1.0, .6], [4.2, 2.6, .85, .5], [-3.4, .6, .6, .4], [-8.6, .8, .7, .45]]) {
+    for (const [m, s] of [[puddleS, 'summer'], [puddleW, 'winter']]) {
+      const pd = new THREE.Mesh(new THREE.CircleGeometry(1, 40), m); pd.rotation.x = -Math.PI / 2; pd.scale.set(sx, sz, 1); pd.position.set(x, .045, z); pd.receiveShadow = true; scene.add(seasonal(pd, s));
+    }
+  }
+
+  // the apple tree that gives only three or four green apples a year
+  const tree = makeTree({ seed: 7, len: 1.9, rad: .24, leaf: 0x5f8f3a, leafR: .7, fruitCount: 4 });
+  tree.position.set(-1.6, 0, -4.6); scene.add(tree);
+  // grandma\'s chickens
+  [[0xf2efe6, -7.6, 2.9, .6], [0x9a5b2e, -5.4, -1.6, 2.2], [0xf2efe6, 1.6, -2.8, 4.1]].forEach(([c, x, z, r]) => { const ch = makeChicken(c); ch.position.set(x, 0, z); ch.rotation.y = r; scene.add(ch); });
+
+  girl = makeGirl(); scene.add(girl);
+  girl.position.copy(spot(0)); girl.rotation.y = Math.PI * .35;
+
+  const N = 900, pos = new Float32Array(N * 3), sr = rng(5);
+  for (let i = 0; i < N; i++) { pos[i * 3] = (sr() - .5) * (W - 2); pos[i * 3 + 1] = sr() * 18; pos[i * 3 + 2] = (sr() - .5) * (D - 2); }
+  const sg = new THREE.BufferGeometry(); sg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  snowPts = new THREE.Points(sg, new THREE.PointsMaterial({ map: T.flake, size: .22, transparent: true, depthWrite: false }));
+  scene.add(seasonal(snowPts, 'winter'));
+
+  buildUI();
+  setSeason('summer');
+  go(0, true);
+  addEventListener('resize', onResize);
+  bindPointer();
+  renderer.setAnimationLoop(tick);
+}
+
+function register(obj, step) { obj.traverse(m => { if (m.isMesh) { m.userData.step = step; pickables.push(m); } }); }
+
+/* where the girl stands for each step */
+function spot(i) {
+  if (i <= 0) return new THREE.Vector3(KITCHEN.x + .1, .24, KITCHEN.z + 3.5);
+  if (i >= 7) return new THREE.Vector3(MAIN.x, .24, MAIN.z + 3.4);
+  const [x, z] = pathAt(STONE_T[i - 1]);
+  return new THREE.Vector3(x, .3, z);
+}
+
+/* ---------- camera ---------- */
+let tween = null, hop = null, step = 0, cvOpen = false;
+const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+function camFor(i) {
+  const narrow = innerWidth < 720, aspect = innerWidth / innerHeight;
+  if (i === 0 || cvOpen) {
+    // whole diorama, sized to the part of the screen not covered by text
+    const avail = narrow ? .96 : (cvOpen ? .56 : .6);
+    const half = Math.atan(Math.tan(THREE.MathUtils.degToRad(16)) * aspect);
+    const fitW = 46 / avail / 2 / Math.tan(half);
+    const fitH = narrow ? 30 / .5 / 2 / Math.tan(THREE.MathUtils.degToRad(16)) : 0;
+    const d = THREE.MathUtils.clamp(Math.max(fitW, fitH), 45, 200);
+    const target = new THREE.Vector3(0, -1.2, 0);
+    const pos = target.clone().add(new THREE.Vector3(0, d * .46, d * .89));
+    return { pos, target, sx: narrow ? 0 : (cvOpen ? -.21 : .19), sy: narrow ? (cvOpen ? .25 : .2) : 0 };
+  }
+  const s = spot(i);
+  const target = new THREE.Vector3(s.x, 1.3, s.z - 1.2);
+  if (i === 1) target.set(KITCHEN.x + .6, 1.6, KITCHEN.z + 1.6);
+  if (i === 7) target.set(MAIN.x, 2.0, MAIN.z + 1.2);
+  const pos = target.clone().add(new THREE.Vector3(i === 7 ? -3 : 2.5, 7.5, 17));
+  if (narrow) pos.add(new THREE.Vector3(0, 4, 5));
+  return { pos, target, sx: narrow ? 0 : -.19, sy: narrow ? .22 : 0 };
+}
+let viewSX = 0, viewSY = 0;
+function applyView() { const w = innerWidth, h = innerHeight; camera.setViewOffset(w, h, -viewSX * w, viewSY * h, w, h); }
+function flyTo(c, instant) {
+  if (instant || reduceMotion) { camera.position.copy(c.pos); controls.target.copy(c.target); viewSX = c.sx; viewSY = c.sy; applyView(); controls.update(); tween = null; return; }
+  tween = { p0: camera.position.clone(), t0: controls.target.clone(), p1: c.pos, t1: c.target, x0: viewSX, y0: viewSY, x1: c.sx, y1: c.sy, s: performance.now(), d: 1300 };
+}
+
+/* ---------- story ---------- */
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const ext = (href, text) => `<a href="${esc(href)}" target="_blank" rel="noopener">${esc(text)} ↗</a>`;
+const itemsHTML = list => '<ul class="items">' + list.map(it => `<li><h3>${it.url && !it.m ? ext(it.url, it.t) : esc(it.t)}</h3>${it.m ? `<div class="meta">${it.url ? ext(it.url, it.m) : esc(it.m)}</div>` : ''}${it.links ? `<p class="links">${it.links.map(([t, h]) => ext(h, t)).join(' · ')}</p>` : ''}${it.d ? `<p>${esc(it.d)}</p>` : ''}${it.b ? `<ul class="bullets">${it.b.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}</li>`).join('') + '</ul>';
+const chipsHTML = list => '<ul class="chips">' + list.map(c => `<li>${esc(c)}</li>`).join('') + '</ul>';
+const navEls = [];
+function buildUI() {
+  const nav = document.getElementById('nav'), tags = document.getElementById('tags');
+  STEPS.forEach((s, i) => {
+    const b = document.createElement('button'); b.type = 'button';
+    b.addEventListener('click', () => go(i));
+    nav.appendChild(b); navEls.push(b);
+    const t = document.createElement('div'); t.className = 'tag'; tags.appendChild(t); tagEls.push(t);
+  });
+  applyLang();
+}
+function applyLang() {
+  const u = UI[lang];
+  document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+  document.body.classList.toggle('en', lang === 'en');
+  STEPS.forEach((_, i) => {
+    const s = S(i);
+    navEls[i].innerHTML = `${esc(s.nav)}${s.year ? `<small>${esc(s.year)}</small>` : '<small>&nbsp;</small>'}`;
+    tagEls[i].textContent = s.nav;
+  });
+  document.getElementById('brandSub').textContent = u.sub;
+  document.getElementById('hint').textContent = u.hint;
+  document.getElementById('pPrev').textContent = u.prev;
+  document.getElementById('pNext').textContent = u.next;
+  document.getElementById('sSummer').textContent = u.summer;
+  document.getElementById('sWinter').textContent = u.winter;
+  document.getElementById('bWr').textContent = u.wr;
+  const intro = S(0);
+  document.getElementById('introTitle').textContent = intro.title;
+  document.getElementById('introP1').textContent = intro.story[0];
+  document.getElementById('introP2').textContent = intro.story[1];
+  document.getElementById('introCv').textContent = u.introCv;
+  document.getElementById('introCta').textContent = u.introWalk;
+  document.getElementById('lZh').setAttribute('aria-pressed', lang === 'zh');
+  document.getElementById('lEn').setAttribute('aria-pressed', lang === 'en');
+}
+function setLang(l) {
+  lang = l; applyLang();
+  if (cvOpen) (overlayKind === 'cv' ? renderCV() : renderWriting()); else render(step);
+  navEls[cvOpen ? 0 : step].setAttribute('aria-current', cvOpen ? 'false' : 'true');
+}
+function render(i) {
+  const s = S(i), panel = document.getElementById('panel');
+  document.getElementById('intro').hidden = i !== 0; panel.hidden = i === 0;
+  if (i === 0) return;
+  document.getElementById('pKicker').textContent = s.kicker;
+  document.getElementById('pCount').textContent = i === 0 ? '' : `${String(i).padStart(2, '0')} / ${String(STEPS.length - 1).padStart(2, '0')}`;
+  document.getElementById('pTitle').textContent = s.title;
+  document.getElementById('pStory').innerHTML = s.story.map(p => `<p>${esc(p)}</p>`).join('') + (s.cta ? `<button class="cta" id="pCta">${esc(s.cta)}</button>` : '');
+  let html = '';
+  if (s.cv) html = '<div class="cv">' + s.cv.map(([h, list, kind]) => `<h4>${esc(h)}</h4>` + (kind === 'chips' ? chipsHTML(list) : itemsHTML(list))).join('') + '</div>';
+  if (s.more) html += `<button class="ghost more" id="pMore">${esc(UI[lang].readWr)}</button>`;
+  document.getElementById('pBody').innerHTML = html;
+  const more = document.getElementById('pMore'); if (more) more.onclick = () => setOverlay('writing');
+  document.getElementById('pPrev').disabled = i === 0;
+  document.getElementById('pNext').disabled = i === STEPS.length - 1;
+  document.getElementById('pPrev').hidden = document.getElementById('pNext').hidden = false;
+  const cta = document.getElementById('pCta'); if (cta) cta.onclick = () => go(1);
+  panel.querySelector('.pscroll').scrollTop = 0;
+  panel.classList.remove('enter'); void panel.offsetWidth; panel.classList.add('enter');
+}
+function renderCV() {
+  const panel = document.getElementById('panel');
+  document.getElementById('intro').hidden = true; panel.hidden = false;
+  document.getElementById('pKicker').textContent = 'Curriculum Vitae';
+  document.getElementById('pCount').textContent = '';
+  document.getElementById('pTitle').textContent = UI[lang].cvTitle;
+  document.getElementById('pStory').innerHTML = `<p style="font-size:14px;line-height:1.8;color:var(--soft)">${esc(CV.summary)}</p>` +
+    `<ul class="highlights">${HIGHLIGHTS.map(h => `<li>${esc(h)}</li>`).join('')}</ul>`;
+  document.getElementById('pBody').innerHTML = '<div class="cv">' +
+    '<h4>Experience</h4>' + itemsHTML([CV.sinolytics, CV.dxc]) +
+    '<h4>Education</h4>' + itemsHTML([CV.master, CV.bachelor]) +
+    '<h4>Skills</h4>' + itemsHTML(CV.skills) +
+    '<h4>Languages</h4>' + itemsHTML(CV.languages) +
+    '<h4>Contact</h4>' + itemsHTML(CV.contact) + '</div>';
+  document.getElementById('pPrev').hidden = document.getElementById('pNext').hidden = true;
+  panel.querySelector('.pscroll').scrollTop = 0;
+  panel.classList.remove('enter'); void panel.offsetWidth; panel.classList.add('enter');
+}
+function renderWriting() {
+  const panel = document.getElementById('panel'), u = UI[lang];
+  const list = items => '<ul class="items">' + items.map(it => `<li><h3>${ext(it.url, it.t)}</h3><div class="meta">${esc(it.m)}</div></li>`).join('') + '</ul>';
+  document.getElementById('intro').hidden = true; panel.hidden = false;
+  document.getElementById('pKicker').textContent = 'Writing';
+  document.getElementById('pCount').textContent = '';
+  document.getElementById('pTitle').textContent = u.wrTitle;
+  document.getElementById('pStory').innerHTML = `<p class="writing-intro">${esc(u.wrIntro)}</p>`;
+  document.getElementById('pBody').innerHTML = '<div class="cv">' +
+    '<h4>Sinolytics</h4>' + list(CV.articles) +
+    '<h4>Interview</h4>' + list([CV.interview]) +
+    '<h4>Notes</h4>' + list([CV.writing]) + '</div>';
+  document.getElementById('pPrev').hidden = document.getElementById('pNext').hidden = true;
+  panel.querySelector('.pscroll').scrollTop = 0;
+  panel.classList.remove('enter'); void panel.offsetWidth; panel.classList.add('enter');
+}
+let overlayKind = null;
+function setOverlay(kind) {
+  cvOpen = !!kind; overlayKind = kind;
+  document.getElementById('bCv')?.setAttribute('aria-pressed', kind === 'cv');
+  document.getElementById('bWr').setAttribute('aria-pressed', kind === 'writing');
+  if (kind) { kind === 'cv' ? renderCV() : renderWriting(); navEls.forEach(b => b.setAttribute('aria-current', 'false')); flyTo(camFor(0)); }
+  else go(step);
+}
+const setCV = on => setOverlay(on ? 'cv' : null);
+function go(i, instant) {
+  i = Math.max(0, Math.min(STEPS.length - 1, i));
+  if (cvOpen) { cvOpen = false; overlayKind = null; document.getElementById('bCv')?.setAttribute('aria-pressed', 'false'); document.getElementById('bWr').setAttribute('aria-pressed', 'false'); }
+  const from = girl.position.clone(), to = spot(i);
+  if (instant || reduceMotion) girl.position.copy(to);
+  else if (from.distanceTo(to) > .01) hop = { from, to, age: AGE_OF_STEP[i], s: performance.now(), d: 600 + Math.min(4, Math.abs(i - step)) * 150 };
+  if (instant || reduceMotion || from.distanceTo(to) <= .01) setAge(AGE_OF_STEP[i]);
+  const ahead = spot(Math.min(STEPS.length - 1, i + 1));
+  if (i < STEPS.length - 1) girl.rotation.y = Math.atan2(ahead.x - to.x, ahead.z - to.z);
+  else girl.rotation.y = Math.PI;
+  step = i;
+  rings.forEach((r, k) => r.userData.on = k === i - 1);
+  navEls.forEach((b, k) => b.setAttribute('aria-current', k === i ? 'true' : 'false'));
+  navEls[i].scrollIntoView({ block: 'nearest', inline: 'center', behavior: instant || reduceMotion ? 'auto' : 'smooth' });
+  render(i);
+  flyTo(camFor(i), instant);
+}
+document.getElementById('introCta').onclick = () => go(1);
+document.getElementById('introCv').onclick = () => setOverlay('writing');
+document.getElementById('lZh').onclick = () => setLang('zh');
+document.getElementById('lEn').onclick = () => setLang('en');
+document.getElementById('pPrev').onclick = () => go(step - 1);
+document.getElementById('pNext').onclick = () => go(step + 1);
+document.getElementById('bWr').onclick = () => setOverlay(overlayKind === 'writing' ? null : 'writing');
+document.getElementById('sSummer').onclick = () => setSeason('summer');
+document.getElementById('sWinter').onclick = () => setSeason('winter');
+addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); go(step + 1); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); go(step - 1); }
+  if (e.key === 'Escape' && cvOpen) setOverlay(null);
+});
+let wheelAcc = 0, wheelLock = 0;
+addEventListener('wheel', e => {
+  if (e.target.closest && e.target.closest('#panel')) return;
+  const now = performance.now(); if (now < wheelLock) return;
+  wheelAcc += e.deltaY;
+  if (Math.abs(wheelAcc) > 60) { go(step + Math.sign(wheelAcc)); wheelAcc = 0; wheelLock = now + 900; }
+}, { passive: true });
+
+function setSeason(s) {
+  winterOnly.forEach(o => o.visible = s === 'winter');
+  summerOnly.forEach(o => o.visible = s === 'summer');
+  document.body.classList.toggle('summer', s === 'summer');
+  hemi.intensity = s === 'winter' ? .5 : .55;
+  sun.intensity = s === 'winter' ? 1.45 : 2.3;
+  sun.color.setHex(s === 'winter' ? 0xffeedd : 0xffd8a6);
+  document.getElementById('sWinter').setAttribute('aria-pressed', s === 'winter');
+  document.getElementById('sSummer').setAttribute('aria-pressed', s === 'summer');
+}
+
+/* ---------- pointer ---------- */
+const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+let hoverStep = null;
+function pick(e) {
+  const r = renderer.domElement.getBoundingClientRect();
+  ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  ray.setFromCamera(ndc, camera);
+  const hit = ray.intersectObjects(pickables, false)[0];
+  return hit ? hit.object.userData.step : null;
+}
+function bindPointer() {
+  const el = renderer.domElement; let down = null;
+  el.addEventListener('pointerdown', e => { down = { x: e.clientX, y: e.clientY }; tween = null; });
+  el.addEventListener('pointermove', e => {
+    if (e.pointerType !== 'mouse' || e.buttons) return;
+    hoverStep = pick(e); el.style.cursor = hoverStep ? 'pointer' : '';
+  });
+  el.addEventListener('pointerup', e => {
+    if (!down) return;
+    const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y); down = null;
+    if (moved < 6) { const k = pick(e); if (k) go(k); }
+  });
+}
+function onResize() {
+  camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  flyTo(camFor(cvOpen ? 0 : step), true);
+}
+
+/* ---------- loop ---------- */
+const v = new THREE.Vector3(); let last = performance.now();
+function tick(now) {
+  const dt = Math.min(.05, (now - last) / 1000); last = now;
+  if (tween) {
+    const t = Math.min(1, (now - tween.s) / tween.d), k = ease(t);
+    camera.position.lerpVectors(tween.p0, tween.p1, k);
+    controls.target.lerpVectors(tween.t0, tween.t1, k);
+    viewSX = tween.x0 + (tween.x1 - tween.x0) * k; viewSY = tween.y0 + (tween.y1 - tween.y0) * k; applyView();
+    if (t >= 1) tween = null;
+  }
+  controls.update();
+  if (hop) {
+    const t = Math.min(1, (now - hop.s) / hop.d);
+    girl.position.lerpVectors(hop.from, hop.to, ease(t));
+    girl.position.y += Math.sin(Math.PI * t) * .7;
+    if (t > .5 && !hop.grown) { setAge(hop.age); hop.grown = true; }
+    if (t >= 1) hop = null;
+  } else if (!reduceMotion) girl.position.y = spot(step).y + Math.abs(Math.sin(now * .002)) * .02;
+
+  rings.forEach((r, k) => {
+    const want = r.userData.on ? .55 + Math.sin(now * .003) * .15 : (hoverStep === k + 1 ? .3 : 0);
+    r.material.opacity += (want - r.material.opacity) * Math.min(1, dt * 6);
+  });
+  if (snowPts.visible && !reduceMotion) {
+    const a = snowPts.geometry.attributes.position, arr = a.array;
+    for (let i = 0; i < arr.length; i += 3) {
+      arr[i + 1] -= dt * (1.2 + (i % 7) * .1);
+      arr[i] += Math.sin(now * .0006 + i) * dt * .2;
+      if (arr[i + 1] < 0) arr[i + 1] = 18;
+    }
+    a.needsUpdate = true;
+  }
+  smoke.forEach(s => {
+    s.userData.t = (s.userData.t + dt * (reduceMotion ? 0 : .1)) % 1;
+    const t = s.userData.t;
+    s.position.copy(s.userData.base).add(v.set(t * 1.4 + Math.sin(t * 6) * .2, t * 4.2, -t * .5));
+    const sc = .45 + t * 1.8; s.scale.set(sc, sc, 1);
+    s.material.opacity = .5 * (1 - t);
+  });
+  const w = innerWidth, h = innerHeight;
+  tagEls.forEach((el, i) => {
+    const show = hoverStep === i && i !== step && i > 0;
+    el.classList.toggle('on', show);
+    if (!show) return;
+    v.copy(spot(i)); v.y += i === 1 || i === 7 ? 4.8 : 1.4; v.project(camera);
+    el.style.transform = `translate(${(v.x + 1) / 2 * w + viewSX * w}px, ${(1 - v.y) / 2 * h - viewSY * h}px) translate(-50%, -100%)`;
+  });
+  renderer.render(scene, camera);
+}
+
+const CHARS = '天增岁月人增寿春满乾坤福满门福';
+Promise.race([
+  document.fonts ? document.fonts.load('46px "Ma Shan Zheng"', CHARS) : Promise.resolve(),
+  new Promise(r => setTimeout(r, 2500))
+]).catch(() => {}).then(init);
+</script>
