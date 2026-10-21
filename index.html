@@ -102,6 +102,19 @@ body.en #pTitle, body.en #intro h1 { font-family: var(--latin); font-weight: 600
 body.en #intro h1 { font-size: clamp(30px, 2.9vw, 42px); }
 #intro { text-shadow: 0 1px 12px rgba(0,0,0,.55); }
 body.en .story p { line-height: 1.8; }
+#loader {
+  position: fixed; inset: 0; z-index: 50; display: grid; place-content: center; gap: 14px; text-align: center;
+  background: radial-gradient(ellipse 85% 75% at 50% 45%, var(--bg1), var(--bg0) 78%); background-color: var(--bg0);
+  transition: opacity .9s ease, visibility .9s;
+}
+#loader h2 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 40px; letter-spacing: .1em; animation: rise 1.4s ease both; }
+#loader p { margin: 0; font: 500 11px/1 var(--latin); letter-spacing: .32em; text-transform: uppercase; color: var(--muted); animation: rise 1.4s .3s ease both; }
+#loader .bar { justify-self: center; width: 120px; height: 1px; background: var(--line); overflow: hidden; }
+#loader .bar::after { content: ""; display: block; height: 100%; width: 40%; background: var(--accent); animation: slide 1.2s ease-in-out infinite; }
+#loader.done { opacity: 0; visibility: hidden; }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes slide { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+@media (prefers-reduced-motion: reduce) { #loader h2, #loader p, #loader .bar::after { animation: none; } }
 #tags { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
 .tag {
   position: absolute; left: 0; top: 0;
@@ -175,6 +188,7 @@ body.en .story p { line-height: 1.8; }
 @media (prefers-reduced-motion: reduce) { #panel.enter { animation: none; } }
 </style>
 
+<div id="loader" aria-hidden="true"><h2>姥姥家的院子</h2><p>Weiqing Zhu · 1997 — 2026</p><span class="bar"></span></div>
 <div id="stage"></div>
 <div id="tags"></div>
 
@@ -679,6 +693,77 @@ function makeGirl() {
 }
 function setAge(a) { girl.userData.ages.forEach((p, k) => p.visible = k === a); }
 
+
+/* ---------- small things beside each stone ---------- */
+function propMesh(g, geo, color, x, y, z, o = {}) {
+  const m = new THREE.Mesh(geo, mat(color, Object.assign({ roughness: .75 }, o)));
+  m.position.set(x, y, z); m.castShadow = m.receiveShadow = true; g.add(m); return m;
+}
+function makePig() {
+  const g = new THREE.Group(), pink = 0xe6a49b;
+  const body = propMesh(g, new THREE.SphereGeometry(.42, 18, 14), pink, 0, .42, 0); body.scale.set(1.35, .95, .95);
+  propMesh(g, new THREE.SphereGeometry(.26, 16, 12), pink, .58, .52, 0);
+  propMesh(g, new THREE.CylinderGeometry(.11, .12, .1, 14), 0xd98a82, .82, .5, 0).rotation.z = Math.PI / 2;
+  for (const z of [-.12, .12]) { const e = propMesh(g, new THREE.ConeGeometry(.08, .16, 6), pink, .55, .76, z); e.rotation.z = -.4; }
+  for (const [x, z] of [[.32, .2], [.32, -.2], [-.32, .2], [-.32, -.2]]) propMesh(g, new THREE.CylinderGeometry(.06, .06, .22, 8), pink, x, .11, z);
+  const tail = propMesh(g, new THREE.TorusGeometry(.06, .02, 6, 12, Math.PI * 1.6), pink, -.58, .55, 0); tail.rotation.y = Math.PI / 2;
+  const trough = propMesh(g, new THREE.BoxGeometry(.9, .22, .36), 0x5a4632, 1.25, .11, .55);
+  propMesh(g, new THREE.BoxGeometry(.78, .04, .26), 0xb69a5a, 1.25, .21, .55);
+  g.scale.setScalar(.75);
+  return g;
+}
+function makeBooks() {
+  const g = new THREE.Group(), cols = [0x8a3b2e, 0x3d5f8a, 0xd8c9a3, 0x4f7a4a, 0x7a5a8a];
+  cols.forEach((c, k) => { const b = propMesh(g, new THREE.BoxGeometry(.62 - k * .04, .1, .44 - k * .02), c, 0, .05 + k * .1, 0); b.rotation.y = (k % 2 ? .18 : -.12) * k; });
+  const open = propMesh(g, new THREE.BoxGeometry(.5, .03, .36), 0xf2ece0, .62, .015, .2); open.rotation.y = .5;
+  return g;
+}
+function makeUmbrella() {
+  const g = new THREE.Group();
+  const canopy = propMesh(g, new THREE.ConeGeometry(.62, .28, 16, 1, true), 0xc9963c, 0, .62, 0, { side: THREE.DoubleSide, roughness: .6 });
+  for (let k = 0; k < 16; k++) { const r = propMesh(g, new THREE.CylinderGeometry(.008, .008, .66, 3), 0x5a4030, 0, .56, 0); r.rotation.z = Math.PI / 2 - .42; r.rotation.y = k * Math.PI / 8; r.position.set(Math.cos(k * Math.PI / 8) * .3, .62, -Math.sin(k * Math.PI / 8) * .3); }
+  propMesh(g, new THREE.CylinderGeometry(.02, .02, .9, 6), 0x5a4030, 0, .3, 0);
+  g.rotation.z = .55; g.rotation.x = .2; g.position.y = .05;
+  const w = new THREE.Group(); w.add(g); return w;
+}
+function makeCherriesAndCrab() {
+  const g = new THREE.Group();
+  propMesh(g, new THREE.CylinderGeometry(.34, .26, .26, 18), 0xb08a52, 0, .13, 0);
+  const red = [0xb81d24, 0x9e1620, 0xc8262c];
+  for (let k = 0; k < 16; k++) { const a = k * 2.4, r = .08 + (k % 4) * .055; propMesh(g, new THREE.SphereGeometry(.06, 10, 8), red[k % 3], Math.cos(a) * r, .29 + (k % 3) * .03, Math.sin(a) * r, { roughness: .3 }); }
+  const crab = new THREE.Group();
+  const shell = propMesh(crab, new THREE.SphereGeometry(.2, 14, 10), 0xd2552a, 0, .1, 0, { roughness: .5 }); shell.scale.set(1.3, .45, 1);
+  for (const side of [-1, 1]) {
+    for (let k = 0; k < 3; k++) { const l = propMesh(crab, new THREE.CylinderGeometry(.018, .018, .24, 4), 0xc84c24, side * .26, .05, -.1 + k * .1); l.rotation.z = side * 1.1; }
+    const claw = propMesh(crab, new THREE.SphereGeometry(.07, 10, 8), 0xc84c24, side * .16, .1, .26); claw.scale.set(.8, .6, 1.2);
+  }
+  crab.position.set(.6, 0, .25); crab.rotation.y = -.5; g.add(crab);
+  return g;
+}
+function makeBicycle() {
+  const g = new THREE.Group(), frame = 0x2f5d6b, dark = 0x1f2326;
+  for (const x of [-.5, .5]) { const w = propMesh(g, new THREE.TorusGeometry(.32, .025, 8, 28), dark, x, .34, 0); }
+  const tube = (x1, y1, x2, y2, c = frame) => { const len = Math.hypot(x2 - x1, y2 - y1); const t = propMesh(g, new THREE.CylinderGeometry(.022, .022, len, 6), c, (x1 + x2) / 2, (y1 + y2) / 2, 0); t.rotation.z = Math.atan2(x1 - x2, y2 - y1); };
+  tube(-.5, .34, 0, .34); tube(0, .34, -.12, .74); tube(-.12, .74, .42, .74); tube(.42, .74, .5, .34); tube(-.5, .34, -.12, .74); tube(.42, .74, .38, .92);
+  propMesh(g, new THREE.BoxGeometry(.18, .04, .08), dark, -.13, .78, 0);
+  const bar = propMesh(g, new THREE.CylinderGeometry(.02, .02, .4, 6), dark, .38, .93, 0); bar.rotation.x = Math.PI / 2;
+  propMesh(g, new THREE.BoxGeometry(.3, .12, .22), 0x8a6a44, -.52, .72, 0);
+  return g;
+}
+function makeSewingTable() {
+  const g = new THREE.Group(), wood = 0x7a5536, cream = 0xe9e2d2;
+  propMesh(g, new THREE.BoxGeometry(1.1, .06, .6), wood, 0, .7, 0);
+  for (const [x, z] of [[-.5, .25], [.5, .25], [-.5, -.25], [.5, -.25]]) propMesh(g, new THREE.CylinderGeometry(.03, .03, .7, 6), 0x3b2c22, x, .35, z);
+  propMesh(g, new THREE.BoxGeometry(.66, .1, .3), cream, 0, .78, 0, { roughness: .4 });
+  propMesh(g, new THREE.BoxGeometry(.16, .3, .22), cream, .22, .98, 0, { roughness: .4 });
+  propMesh(g, new THREE.BoxGeometry(.5, .12, .2), cream, 0, 1.15, 0, { roughness: .4 });
+  propMesh(g, new THREE.BoxGeometry(.06, .16, .08), cream, -.22, 1.03, 0, { roughness: .4 });
+  const wheel = propMesh(g, new THREE.CylinderGeometry(.08, .08, .04, 16), 0x2b2b2b, .3, 1.1, .12); wheel.rotation.x = Math.PI / 2;
+  propMesh(g, new THREE.CylinderGeometry(.04, .04, .1, 10), 0xb8342a, .05, 1.26, 0);
+  const cloth = propMesh(g, new THREE.BoxGeometry(.4, .015, .34), 0x6f8fb6, -.25, .74, .05); cloth.rotation.y = .3;
+  return g;
+}
+
 /* ---------- the diorama ---------- */
 const W = 40, D = 17, CR = 3.2, BASE = 3.2;
 const HW = W / 2 - CR, HD = D / 2 - CR;
@@ -701,7 +786,8 @@ function init() {
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  const low = innerWidth < 720 || (navigator.hardwareConcurrency || 8) <= 4;
+  renderer.setPixelRatio(Math.min(devicePixelRatio, low ? 1.5 : 2));
   renderer.setSize(innerWidth, innerHeight);
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -718,7 +804,7 @@ function init() {
   hemi = new THREE.HemisphereLight(0xcfdcf0, 0x3a2f26, .55); scene.add(hemi);
   sun = new THREE.DirectionalLight(0xffd8a6, 2.3);
   sun.position.set(-22, 26, 20); sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048);
+  sun.shadow.mapSize.set(low ? 1024 : 2048, low ? 1024 : 2048);
   Object.assign(sun.shadow.camera, { left: -26, right: 26, top: 20, bottom: -20, near: 1, far: 90 });
   sun.shadow.bias = -.0004; sun.shadow.normalBias = .03;
   scene.add(sun);
@@ -825,6 +911,13 @@ function init() {
     }
   }
 
+
+  // a small thing beside each stone, so every stretch of life is recognisable at a glance
+  [[makePig, 0, 1.6, -1.7, .9], [makeBooks, 1, 1.15, -1.2, .3], [makeUmbrella, 2, 1.25, -1.15, 0], [makeCherriesAndCrab, 3, 1.2, -1.15, .4], [makeBicycle, 4, -1.45, -1.2, -.35], [makeSewingTable, 5, -2.2, .6, .25]].forEach(([fn, k, dx, dz, ry]) => {
+    const [x, z] = pathAt(STONE_T[k]);
+    const pr = fn(); pr.position.set(x + dx, 0, z + dz); pr.rotation.y += ry; scene.add(pr); register(pr, k + 1);
+  });
+
   // the apple tree that gives only three or four green apples a year
   const tree = makeTree({ seed: 7, len: 1.9, rad: .24, leaf: 0x5f8f3a, leafR: .7, fruitCount: 4 });
   tree.position.set(-1.6, 0, -4.6); scene.add(tree);
@@ -846,6 +939,7 @@ function init() {
   addEventListener('resize', onResize);
   bindPointer();
   renderer.setAnimationLoop(tick);
+  setTimeout(() => document.getElementById('loader').classList.add('done'), 400);
 }
 
 function register(obj, step) { obj.traverse(m => { if (m.isMesh) { m.userData.step = step; pickables.push(m); } }); }
