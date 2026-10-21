@@ -317,6 +317,7 @@ const STEPS = [
   ], cv: [['Education', [CV.master]]] },
   { nav: '杜塞', year: '2025', kicker: '2025 — 现在 · 杜塞尔多夫', title: '现在', story: [
     '现在我在杜塞尔多夫全职工作。上班前会运动；下班后，我喜欢研究自己感兴趣的话题，比如 AI 和半导体。',
+    '工作上，从 2025 年 2 月起，我一直在为客户写 AI 行业观察：已经写了 28 份周报，每份十几页，还有 8 篇专题研究，主题包括机器人、DeepSeek、算力、AI 基金和 AI 芯片。',
     '周六早上去跳蚤市场听音乐，回家打扫、买菜、做饭。周日，我坐在缝纫机前，这是我最近的新爱好。'
   ], cv: [['Experience', [CV.sinolytics]], ['Focus', CV.industry, 'chips']], more: true },
   { nav: '正房', year: '往前', kicker: '走到正房 · 往前走', title: '正房', story: [
@@ -354,6 +355,7 @@ const EN = [
   ] },
   { nav: 'Düsseldorf', kicker: '2025 — now · Düsseldorf', title: 'Now', story: [
     'Today I work full-time in Düsseldorf. I exercise before work, and after work I like to dig into topics that fascinate me, such as AI and semiconductors.',
+    'At work, since February 2025 I have been writing an AI industry watch for a client: 28 weekly reports of around 16 pages each, plus 8 deep dives on robotics, DeepSeek, compute, AI funds and AI chips.',
     'On Saturday mornings I go to the flea market to listen to music, then clean, shop and cook. On Sundays I sit at my sewing machine, my newest hobby.'
   ] },
   { nav: 'Main house', year: 'Ahead', kicker: 'The main house · Looking ahead', title: 'The Main House', story: [
@@ -369,8 +371,8 @@ const HIGHLIGHTS = [
   'Chinese native · English C1 · German B1'
 ];
 const UI = {
-  zh: { sub: '从厨房到正房 · 1997 — 2026', hint: '滚动或按 → 往前走 · 拖动转动视角', prev: '← 上一块', next: '下一块 →', summer: '夏', winter: '冬', cv: '简历', cvTitle: '简历', introCv: '读我写的文章', introWalk: '踩上第一块石头 →', highlights: '亮点', sound: '声音', wr: '文章', wrTitle: '文章', wrIntro: '我在 Sinolytics 写的分析，主题包括中国 AI、芯片、创新药和科技投入；还有一篇专访和一篇技术笔记。', readWr: '读我写的文章 →' },
-  en: { sub: 'From the kitchen to the main house · 1997 — 2026', hint: 'Scroll or press → to walk · drag to look around', prev: '← Back', next: 'Next stone →', summer: 'Summer', winter: 'Winter', cv: 'CV', cvTitle: 'CV', introCv: 'Read my writing', introWalk: 'Walk the path →', highlights: 'Highlights', sound: 'Sound', wr: 'Writing', wrTitle: 'Writing', wrIntro: "Analyses I wrote at Sinolytics on China's AI, chips, innovative drugs and tech spending, plus an interview and a technical note.", readWr: 'Read my writing →' }
+  zh: { sub: '从厨房到正房 · 1997 — 2026', hint: '滚动或按 → 往前走 · 拖动转动视角', prev: '← 上一块', next: '下一块 →', summer: '夏', winter: '冬', cv: '简历', cvTitle: '简历', introCv: '读我写的文章', introWalk: '踩上第一块石头 →', highlights: '亮点', sound: '声音', wr: '文章', wrTitle: '文章', wrIntro: '我在 Sinolytics 公开发表的分析，主题包括中国 AI、芯片、创新药和科技投入；还有一篇专访和一篇技术笔记。另外，我为客户写了 28 份 AI 行业周报和 8 篇专题研究，这些不公开。', readWr: '读我写的文章 →' },
+  en: { sub: 'From the kitchen to the main house · 1997 — 2026', hint: 'Scroll or press → to walk · drag to look around', prev: '← Back', next: 'Next stone →', summer: 'Summer', winter: 'Winter', cv: 'CV', cvTitle: 'CV', introCv: 'Read my writing', introWalk: 'Walk the path →', highlights: 'Highlights', sound: 'Sound', wr: 'Writing', wrTitle: 'Writing', wrIntro: "Analyses I published at Sinolytics on China's AI, chips, innovative drugs and tech spending, plus an interview and a technical note. I have also written 28 weekly AI industry reports and 8 deep dives for a client, which are not public.", readWr: 'Read my writing →' }
 };
 let lang = (navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en';
 const S = i => lang === 'en' ? Object.assign({}, STEPS[i], EN[i]) : STEPS[i];
